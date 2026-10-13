@@ -247,33 +247,41 @@
 /* ---------------------------------------------------------------------
    Pictures
 
-   Put the files next to index.html and name them img1.jpg, img2.jpg,
-   img3.jpg and so on. Change the extension below if you use .png or
-   .webp. Add or remove lines as needed.
+   img1, img2, img3 are reserved for family pictures (not used yet).
+
+   Gallery images pull from the GitHub repository:
+   https://github.com/Zerothly/wildfury-site/tree/main/Dragon%20cat%20pretty%20good
 
    Both galleries read from this one list, so you only edit it here.
    --------------------------------------------------------------------- */
 var IMAGES = [
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_1.PNG", title: "Placeholder 001", who: "Kal"   },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_2.PNG", title: "Placeholder 002", who: "Zero"  },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_3.PNG", title: "Placeholder 003", who: "Wolfa" },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_Bleh.PNG", title: "Placeholder 004", who: "" },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_Cute.PNG", title: "Placeholder 005", who: "" },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG", title: "Placeholder 006", who: "" },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_Ouch.PNG", title: "Placeholder 007", who: "" },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_Shy.PNG", title: "Placeholder 008", who: "" },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_Sketch.PNG", title: "Placeholder 009", who: "" },
-  { file: "https://raw.githubusercontent.com/Zerothly/wildfury-site/main/Dragon%20cat%20pretty%20good/Ninoto_Dragon_Sit_Smug.PNG", title: "Placeholder 010", who: "" }
+  /* --- Family pictures (reserved, not shown in gallery yet) --- */
+  { file: "img1.jpg", title: "Placeholder 001", who: "Kal"   },
+  { file: "img2.jpg", title: "Placeholder 002", who: "Zero"  },
+  { file: "img3.jpg", title: "Placeholder 003", who: "Wolfa" },
+
+  /* --- Dragon cat gallery --- */
+  { file: "Ninoto_Dragon_Sit_1.PNG",              title: "Placeholder 004", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_2.PNG",              title: "Placeholder 005", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_3.PNG",              title: "Placeholder 006", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_Bleh.PNG",           title: "Placeholder 007", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_Cute.PNG",           title: "Placeholder 008", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG", title: "Placeholder 009", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_Ouch.PNG",           title: "Placeholder 010", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_Shy.PNG",            title: "Placeholder 011", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_Sketch.PNG",         title: "Placeholder 012", who: "Ninoto" },
+  { file: "Ninoto_Dragon_Sit_Smug.PNG",           title: "Placeholder 013", who: "Ninoto" }
 ];
 
-/* How many pictures the small gallery on page 1 shows */
-var MINI_COUNT = 6;
+/* How many pictures the small gallery on page 1 shows.
+   Starts after the 3 family slots, so 3 + 6 = 9 entries total. */
+var MINI_COUNT = 9;
 
 /* Family members. "who" must match the "who" in IMAGES above. */
 var FAMILY = [
-  { name: "Kal",   who: "Kal",   bio: "Placeholder 009" },
-  { name: "Zero",  who: "Zero",  bio: "Placeholder 010" },
-  { name: "Wolfa", who: "Wolfa", bio: "Placeholder 011" }
+  { name: "Kal",   who: "Kal",   bio: "Placeholder 014" },
+  { name: "Zero",  who: "Zero",  bio: "Placeholder 015" },
+  { name: "Wolfa", who: "Wolfa", bio: "Placeholder 016" }
 ];
 
 /* ---------------------------------------------------------------------
@@ -348,15 +356,22 @@ function drawGalleries() {
   mini.innerHTML = "";
   full.innerHTML = "";
 
-  IMAGES.forEach(function (item, i) {
-    if (i < MINI_COUNT) mini.appendChild(tile(item, i));
-    full.appendChild(tile(item, i));
+  /* Only show the Dragon cat images (skip the 3 reserved family slots) */
+  var galleryItems = IMAGES.filter(function (item) {
+    return item.who === "Ninoto";
   });
 
-  if (!IMAGES.length) {
+  galleryItems.forEach(function (item, i) {
+    /* Find the original index in IMAGES for the lightbox */
+    var originalIndex = IMAGES.indexOf(item);
+    if (i < MINI_COUNT - 3) mini.appendChild(tile(item, originalIndex));
+    full.appendChild(tile(item, originalIndex));
+  });
+
+  if (!galleryItems.length) {
     var p = document.createElement("p");
     p.className = "muted";
-    p.textContent = "Placeholder 012";
+    p.textContent = "Placeholder 017";
     mini.appendChild(p);
   }
 }
@@ -389,8 +404,17 @@ function showLb() {
 }
 
 function step(n) {
-  if (!IMAGES.length) return;
-  at = (at + n + IMAGES.length) % IMAGES.length;
+  /* Only step through gallery items (skip reserved family slots) */
+  var galleryIndices = [];
+  for (var i = 0; i < IMAGES.length; i++) {
+    if (IMAGES[i].who === "Ninoto") galleryIndices.push(i);
+  }
+  if (!galleryIndices.length) return;
+
+  var pos = galleryIndices.indexOf(at);
+  if (pos === -1) pos = 0;
+  pos = (pos + n + galleryIndices.length) % galleryIndices.length;
+  at = galleryIndices[pos];
   showLb();
 }
 
