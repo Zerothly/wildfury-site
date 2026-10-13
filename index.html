@@ -1,1 +1,434 @@
-hello world
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>House of Wildfury</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #fff;
+    color: #111;
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  a { color: #111; }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* hero banner */
+  .hero {
+    border-bottom: 1px solid #ddd;
+    padding: 48px 0 40px;
+  }
+
+  .hero h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .hero p {
+    margin: 8px 0 0;
+    color: #777;
+    font-size: .9rem;
+  }
+
+  /* pages */
+  .page { display: none; }
+  .page.on { display: block; }
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 48px 0 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 12px 0 4px;
+  }
+
+  p { margin: 12px 0; }
+
+  .muted { color: #777; font-size: .875rem; }
+
+  .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* family */
+  .family {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 20px;
+  }
+
+  .person img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: #f2f2f2;
+    border: 1px solid #ddd;
+  }
+
+  .person p { margin: 6px 0 0; }
+
+  /* gallery */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .tile {
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    background: #f2f2f2;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .tile img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .tile:hover { border-color: #111; }
+  .tile:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+
+  /* lightbox */
+  .lb {
+    position: fixed;
+    inset: 0;
+    display: none;
+    background: #fff;
+    z-index: 10;
+  }
+
+  .lb.on { display: block; }
+
+  .lb img {
+    display: block;
+    max-width: calc(100% - 80px);
+    max-height: calc(100% - 140px);
+    margin: 60px auto 0;
+    object-fit: contain;
+  }
+
+  .lb .cap {
+    text-align: center;
+    font-size: .875rem;
+    color: #777;
+    margin-top: 14px;
+  }
+
+  .lb .bar {
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .lb button {
+    font: inherit;
+    color: #111;
+    background: none;
+    border: 0;
+    padding: 4px 10px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .lb .close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+  }
+
+  footer {
+    border-top: 1px solid #ddd;
+    margin-top: 72px;
+    padding: 20px 0 40px;
+    font-size: .8125rem;
+    color: #888;
+  }
+
+  @media (max-width: 560px) {
+    .family { grid-template-columns: 1fr; gap: 32px; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .hero { padding: 36px 0 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>House of Wildfury</h1>
+    <p>Placeholder 000</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== Page 1 ===== -->
+  <section class="page" data-page="home">
+
+    <h2 style="margin-top:40px;border:0;padding:0;">Welcome</h2>
+
+    <p>
+      First of all!, Thanks to
+      <a href="https://alfyn.page/">Alfyn</a>
+      for big help in setting up our site!
+    </p>
+
+    <h2>Family</h2>
+    <div class="family" id="family"></div>
+
+    <h2>
+      <span class="row">
+        <span>Gallery</span>
+        <a class="muted" href="#gallery">View all</a>
+      </span>
+    </h2>
+    <div class="grid" id="mini"></div>
+
+  </section>
+
+  <!-- ===== Page 2 ===== -->
+  <section class="page" data-page="gallery">
+
+    <h2 style="margin-top:40px;border:0;padding:0;">
+      <span class="row">
+        <span>Gallery</span>
+        <a class="muted" href="#home">Back</a>
+      </span>
+    </h2>
+    <div class="grid" id="full"></div>
+
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">House of Wildfury</div>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image">
+  <button class="close" id="lbClose">Close</button>
+  <img id="lbImg" alt="">
+  <div class="cap" id="lbCap"></div>
+  <div class="bar">
+    <button id="lbPrev">Previous</button>
+    <button id="lbNext">Next</button>
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------------
+   Pictures
+
+   Put the files next to index.html and name them img1.jpg, img2.jpg,
+   img3.jpg and so on. Change the extension below if you use .png or
+   .webp. Add or remove lines as needed.
+
+   Both galleries read from this one list, so you only edit it here.
+   --------------------------------------------------------------------- */
+var IMAGES = [
+  { file: "img1.jpg", title: "Placeholder 001", who: "Kal"   },
+  { file: "img2.jpg", title: "Placeholder 002", who: "Zero"  },
+  { file: "img3.jpg", title: "Placeholder 003", who: "Wolfa" },
+  { file: "img4.jpg", title: "Placeholder 004", who: "" },
+  { file: "img5.jpg", title: "Placeholder 005", who: "" },
+  { file: "img6.jpg", title: "Placeholder 006", who: "" },
+  { file: "img7.jpg", title: "Placeholder 007", who: "" },
+  { file: "img8.jpg", title: "Placeholder 008", who: "" }
+];
+
+/* How many pictures the small gallery on page 1 shows */
+var MINI_COUNT = 6;
+
+/* Family members. "who" must match the "who" in IMAGES above. */
+var FAMILY = [
+  { name: "Kal",   who: "Kal",   bio: "Placeholder 009" },
+  { name: "Zero",  who: "Zero",  bio: "Placeholder 010" },
+  { name: "Wolfa", who: "Wolfa", bio: "Placeholder 011" }
+];
+
+/* ---------------------------------------------------------------------
+   Everything below just draws the page.
+   --------------------------------------------------------------------- */
+
+function $(sel, root) { return (root || document).querySelector(sel); }
+function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+
+function placeholder(name) {
+  var svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">' +
+      '<rect width="100%" height="100%" fill="#f2f2f2"/>' +
+      '<text x="50%" y="50%" fill="#999" font-family="sans-serif" font-size="40" ' +
+        'text-anchor="middle" dominant-baseline="middle">' + name + '</text>' +
+    '</svg>';
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+function picture(item) {
+  var img = document.createElement("img");
+  img.alt = item.title || item.file;
+  img.loading = "lazy";
+  img.src = item.file;
+  img.onerror = function () {
+    img.onerror = null;
+    img.src = placeholder(item.file);
+  };
+  return img;
+}
+
+function tile(item, index) {
+  var b = document.createElement("button");
+  b.type = "button";
+  b.className = "tile";
+  b.title = item.title || item.file;
+  b.setAttribute("aria-label", "Open " + (item.title || item.file));
+  b.appendChild(picture(item));
+  b.onclick = function () { openLb(index); };
+  return b;
+}
+
+function drawFamily() {
+  var box = $("#family");
+  box.innerHTML = "";
+  FAMILY.forEach(function (m) {
+    var found = null;
+    for (var i = 0; i < IMAGES.length; i++) {
+      if (IMAGES[i].who === m.who) { found = IMAGES[i]; break; }
+    }
+    if (!found) found = { file: "img1.jpg", title: m.name };
+
+    var el = document.createElement("article");
+    el.className = "person";
+    el.appendChild(picture(found));
+
+    var h = document.createElement("h3");
+    h.textContent = m.name;
+
+    var bio = document.createElement("p");
+    bio.textContent = m.bio;
+
+    el.appendChild(h);
+    el.appendChild(bio);
+    box.appendChild(el);
+  });
+}
+
+function drawGalleries() {
+  var mini = $("#mini");
+  var full = $("#full");
+  mini.innerHTML = "";
+  full.innerHTML = "";
+
+  IMAGES.forEach(function (item, i) {
+    if (i < MINI_COUNT) mini.appendChild(tile(item, i));
+    full.appendChild(tile(item, i));
+  });
+
+  if (!IMAGES.length) {
+    var p = document.createElement("p");
+    p.className = "muted";
+    p.textContent = "Placeholder 012";
+    mini.appendChild(p);
+  }
+}
+
+/* Lightbox */
+var lb = $("#lb"), lbImg = $("#lbImg"), lbCap = $("#lbCap"), at = 0;
+
+function openLb(i) {
+  at = i;
+  showLb();
+  lb.classList.add("on");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLb() {
+  lb.classList.remove("on");
+  document.body.style.overflow = "";
+}
+
+function showLb() {
+  var item = IMAGES[at];
+  if (!item) return;
+  lbImg.onerror = function () {
+    lbImg.onerror = null;
+    lbImg.src = placeholder(item.file);
+  };
+  lbImg.src = item.file;
+  lbImg.alt = item.title || item.file;
+  lbCap.textContent = item.title || item.file;
+}
+
+function step(n) {
+  if (!IMAGES.length) return;
+  at = (at + n + IMAGES.length) % IMAGES.length;
+  showLb();
+}
+
+$("#lbClose").onclick = closeLb;
+$("#lbPrev").onclick = function () { step(-1); };
+$("#lbNext").onclick = function () { step(1); };
+lb.onclick = function (e) { if (e.target === lb) closeLb(); };
+
+document.addEventListener("keydown", function (e) {
+  if (!lb.classList.contains("on")) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+});
+
+/* Page switching */
+var PAGES = ["home", "gallery"];
+
+function showPage(id) {
+  var target = document.querySelector('.page[data-page="' + id + '"]');
+  if (!target) return false;
+  var changed = !target.classList.contains("on");
+
+  $$(".page").forEach(function (p) { p.classList.toggle("on", p === target); });
+
+  if (changed) window.scrollTo(0, 0);
+  return true;
+}
+
+function route() {
+  var id = location.hash.replace(/^#/, "");
+  if (!id) { showPage("home"); return; }
+  if (PAGES.indexOf(id) > -1) { showPage(id); return; }
+  showPage("home");
+}
+
+drawFamily();
+drawGalleries();
+route();
+window.addEventListener("hashchange", route);
+</script>
+</body>
+</html>
