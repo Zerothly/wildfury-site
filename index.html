@@ -666,70 +666,102 @@ document.addEventListener("keydown", function (e) {
   if (e.key === "ArrowRight") step(1);
 });
 
-/* ---------- discord popover ---------- */
+/* ---------- discord popovers (supports multiple) ---------- */
 (function () {
-  var btn = document.querySelector(".discord-btn");
-  var pop = document.querySelector(".discord-pop");
-  var closeBtn = document.querySelector(".discord-close");
-  var copyBtn = document.querySelector(".copy-btn");
-  if (!btn || !pop) return;
+  var wrappers = document.querySelectorAll(".discord");
 
-  function setOpen(open) {
-    pop.hidden = !open;
-    btn.setAttribute("aria-expanded", open ? "true" : "false");
-  }
+  wrappers.forEach(function (wrap) {
+    var btn      = wrap.querySelector(".discord-btn");
+    var pop      = wrap.querySelector(".discord-pop");
+    var closeBtn = wrap.querySelector(".discord-close");
+    var copyBtn  = wrap.querySelector(".copy-btn");
+    if (!btn || !pop) return;
 
-  btn.addEventListener("click", function (e) {
-    e.stopPropagation();
-    setOpen(pop.hidden);
+    function setOpen(open) {
+      pop.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      /* close any other open popover first */
+      wrappers.forEach(function (other) {
+        if (other !== wrap) {
+          var op = other.querySelector(".discord-pop");
+          var ob = other.querySelector(".discord-btn");
+          if (op && !op.hidden) {
+            op.hidden = true;
+            if (ob) ob.setAttribute("aria-expanded", "false");
+          }
+        }
+      });
+      setOpen(pop.hidden);
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        setOpen(false);
+      });
+    }
+
+    /* keep clicks inside the popover from closing it */
+    pop.addEventListener("click", function (e) { e.stopPropagation(); });
+
+    /* copy */
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        var text = copyBtn.getAttribute("data-copy") || "";
+        var original = copyBtn.textContent;
+
+        function done() {
+          copyBtn.textContent = "Copied";
+          setTimeout(function () { copyBtn.textContent = original; }, 1200);
+        }
+
+        function fallback() {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); done(); } catch (err) {}
+          document.body.removeChild(ta);
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, fallback);
+        } else {
+          fallback();
+        }
+      });
+    }
   });
 
-  if (closeBtn) {
-    closeBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      setOpen(false);
+  /* close any open popover when clicking outside or pressing Escape */
+  document.addEventListener("click", function () {
+    wrappers.forEach(function (wrap) {
+      var op = wrap.querySelector(".discord-pop");
+      var ob = wrap.querySelector(".discord-btn");
+      if (op && !op.hidden) {
+        op.hidden = true;
+        if (ob) ob.setAttribute("aria-expanded", "false");
+      }
     });
-  }
-
-  document.addEventListener("click", function (e) {
-    if (pop.hidden) return;
-    if (pop.contains(e.target) || e.target === btn) return;
-    setOpen(false);
   });
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && !pop.hidden) setOpen(false);
-  });
-
-  /* copy */
-  if (copyBtn) {
-    copyBtn.addEventListener("click", function () {
-      var text = copyBtn.getAttribute("data-copy") || "";
-      var original = copyBtn.textContent;
-
-      function done() {
-        copyBtn.textContent = "Copied";
-        setTimeout(function () { copyBtn.textContent = original; }, 1200);
-      }
-
-      function fallback() {
-        var ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand("copy"); done(); } catch (err) {}
-        document.body.removeChild(ta);
-      }
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, fallback);
-      } else {
-        fallback();
+    if (e.key !== "Escape") return;
+    wrappers.forEach(function (wrap) {
+      var op = wrap.querySelector(".discord-pop");
+      var ob = wrap.querySelector(".discord-btn");
+      if (op && !op.hidden) {
+        op.hidden = true;
+        if (ob) ob.setAttribute("aria-expanded", "false");
       }
     });
-  }
+  });
 })();
 
 /* ---------- page switching ---------- */
