@@ -58,23 +58,27 @@
   }
 
   .hero h1 {
-    margin: 0 0 14px;
+    margin: 0 0 22px;
     font-size: 1.85rem;
     line-height: 1.2;
   }
 
-  .sonas {
-    margin: 0 0 18px;
+  /* two-person row */
+  .people {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 32px;
+  }
+
+  .hero-person { min-width: 0; }
+
+  .sona {
+    margin: 0 0 6px;
     font-size: .95rem;
     color: var(--muted);
-    line-height: 1.8;
   }
 
-  .sonas span {
-    display: block;
-  }
-
-  .sonas b {
+  .sona b {
     color: var(--text);
     font-weight: 600;
   }
@@ -82,7 +86,8 @@
   .contact {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 14px;
+    align-items: baseline;
+    gap: 6px 12px;
     margin: 0;
     font-size: .92rem;
   }
@@ -95,6 +100,92 @@
   .contact a:hover {
     border-bottom-color: var(--accent);
     text-decoration: none;
+  }
+
+  /* ---------- discord popover ---------- */
+  .discord {
+    position: relative;
+    display: inline-block;
+  }
+
+  .discord-btn {
+    font: inherit;
+    color: var(--accent);
+    background: none;
+    border: 0;
+    padding: 0 0 1px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .discord-btn:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  .discord-pop {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    min-width: 190px;
+    max-width: calc(100vw - 40px);
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: 0 10px 26px rgba(61, 52, 40, .14);
+    padding: 16px 16px 14px;
+    text-align: center;
+  }
+
+  .discord-pop[hidden] { display: none; }
+
+  .discord-pop code {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .95rem;
+    color: var(--text);
+    margin: 0 0 12px;
+    letter-spacing: .02em;
+    word-break: break-all;
+  }
+
+  .discord-close {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .discord-close:hover { color: var(--text); }
+
+  .copy-btn {
+    display: block;
+    width: 100%;
+    font: inherit;
+    font-size: .82rem;
+    color: var(--text);
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+
+  .copy-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
   /* ---------- pages ---------- */
@@ -275,6 +366,7 @@
     .grid   { grid-template-columns: repeat(2, 1fr); }
     .hero   { padding: 32px 0 26px; }
     .hero h1 { font-size: 1.55rem; }
+    .people  { grid-template-columns: 1fr; gap: 22px; }
   }
 </style>
 </head>
@@ -282,39 +374,49 @@
 
 <!-- ============ HERO ============ -->
 <header class="hero">
-    <div class="wrap">
-      <p class="eyebrow">House of Wildfury</p>
-      <h1>Kallizto &amp; Zerothly</h1>
+  <div class="wrap">
+    <p class="eyebrow">House of Wildfury</p>
+    <h1>Kallizto &amp; Zerothly</h1>
 
-      <div class="people">
-        <section class="person">
-          <p class="sona"><b>Kallizto</b> · Starzura, Wolfa</p>
-          <p class="contact">
-            <a href="https://x.com/TZCALLISTO">Twitter</a>
-            <a href="https://t.me/Kalliz_Wildfury">Telegram</a>
-            <span class="discord">
-              <button type="button" class="discord-btn" data-user="tzcallizto">Discord</button>
-              <span class="discord-pop">
-                <code>tzcallizto</code>
-                <button type="button" class="copy-btn" data-copy="tzcallizto">Copy</button>
-              </span>
+    <div class="people">
+
+      <section class="hero-person">
+        <p class="sona"><b>Kallizto</b> · Starzura, Wolfa</p>
+        <p class="contact">
+          <a href="https://x.com/TZCALLISTO">Twitter</a>
+          <a href="https://t.me/Kalliz_Wildfury">Telegram</a>
+          <span class="discord">
+            <button type="button" class="discord-btn" aria-haspopup="true" aria-expanded="false">Discord</button>
+            <span class="discord-pop" hidden>
+              <button type="button" class="discord-close" aria-label="Close">×</button>
+              <code>tzcallizto</code>
+              <button type="button" class="copy-btn" data-copy="tzcallizto">Copy</button>
             </span>
-            <a href="https://www.facebook.com/kalliz.wildfury">Facebook</a>
-          </p>
-        </section>
+          </span>
+          <a href="https://www.facebook.com/kalliz.wildfury">Facebook</a>
+        </p>
+      </section>
 
-        <section class="person">
-          <p class="sona"><b>Zerothly</b> · Cinder</p>
-          <p class="contact">
-            <a href="https://x.com/Zerothly_">Twitter</a>
-            <a href="https://t.me/Zerothly">Telegram</a>
-            <a href="#">Discord</a>
-            <a href="#">Facebook</a>
-          </p>
-        </section>
-      </div>
+      <section class="hero-person">
+        <p class="sona"><b>Zerothly</b> · Cinder</p>
+        <p class="contact">
+          <a href="https://x.com/Zerothly_">Twitter</a>
+          <a href="https://t.me/Zerothly">Telegram</a>
+          <span class="discord">
+            <button type="button" class="discord-btn" aria-haspopup="true" aria-expanded="false">Discord</button>
+            <span class="discord-pop" hidden>
+              <button type="button" class="discord-close" aria-label="Close">×</button>
+              <code>zerothly</code>
+              <button type="button" class="copy-btn" data-copy="zerothly">Copy</button>
+            </span>
+          </span>
+          <a href="https://www.facebook.com/profile.php?id=61576858875404">Facebook</a>
+        </p>
+      </section>
+
     </div>
-  </header>
+  </div>
+</header>
 
 <main class="wrap">
 
@@ -382,63 +484,36 @@
 <script>
 /* ---------------------------------------------------------------------
    Pictures
-
-   img1, img2, img3 are reserved for character portraits (below).
-   Gallery images live in the folder "Dragon cat pretty good".
-
-   If you rename or move the folder, update IMAGE_FOLDER.
    --------------------------------------------------------------------- */
 var IMAGE_FOLDER = "Dragon cat pretty good/";
 
 var IMAGES = [
-  /* --- Character portraits (reserved slots) --- */
   { file: "img1.jpg", title: "Starzura", who: "Starzura" },
   { file: "img2.jpg", title: "Wolfa",    who: "Wolfa"    },
   { file: "img3.jpg", title: "Cinder",   who: "Cinder"   },
 
-  /* --- Dragon cat gallery --- */
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_1.PNG",                  title: "Placeholder 004", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_2.PNG",                  title: "Placeholder 005", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_3.PNG",                  title: "Placeholder 006", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Bleh.PNG",               title: "Placeholder 007", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Cute.PNG",               title: "Placeholder 008", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG",   title: "Placeholder 009", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Ouch.PNG",               title: "Placeholder 010", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Shy.PNG",                title: "Placeholder 011", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Sketch.PNG",             title: "Placeholder 012", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",               title: "Placeholder 013", who: "Ninoto" }
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_1.PNG",                title: "Placeholder 004", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_2.PNG",                title: "Placeholder 005", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_3.PNG",                title: "Placeholder 006", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Bleh.PNG",             title: "Placeholder 007", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Cute.PNG",             title: "Placeholder 008", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG", title: "Placeholder 009", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Ouch.PNG",             title: "Placeholder 010", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Shy.PNG",              title: "Placeholder 011", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Sketch.PNG",           title: "Placeholder 012", who: "Ninoto" },
+  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",             title: "Placeholder 013", who: "Ninoto" }
 ];
 
-/* How many pictures the mini gallery on page 1 shows */
 var MINI_COUNT = 6;
 
-/* Characters. "who" must match the "who" in IMAGES above. */
 var CHARACTERS = [
-  {
-    name:  "Starzura",
-    role:  "Prince",
-    owner: "Kallizto",
-    who:   "Starzura",
-    bio:   "Placeholder 014"
-  },
-  {
-    name:  "Wolfa",
-    role:  "Placeholder",
-    owner: "Kallizto",
-    who:   "Wolfa",
-    bio:   "Placeholder 015"
-  },
-  {
-    name:  "Cinder",
-    role:  "Knight",
-    owner: "Zerothly",
-    who:   "Cinder",
-    bio:   "Placeholder 016"
-  }
+  { name: "Starzura", role: "Prince",      owner: "Kallizto", who: "Starzura", bio: "Placeholder 014" },
+  { name: "Wolfa",    role: "Placeholder", owner: "Kallizto", who: "Wolfa",    bio: "Placeholder 015" },
+  { name: "Cinder",   role: "Knight",      owner: "Zerothly", who: "Cinder",   bio: "Placeholder 016" }
 ];
 
 /* ---------------------------------------------------------------------
-   Everything below just draws the page.
+   Drawing the page
    --------------------------------------------------------------------- */
 
 function $(sel, root) { return (root || document).querySelector(sel); }
@@ -590,6 +665,72 @@ document.addEventListener("keydown", function (e) {
   if (e.key === "ArrowLeft") step(-1);
   if (e.key === "ArrowRight") step(1);
 });
+
+/* ---------- discord popover ---------- */
+(function () {
+  var btn = document.querySelector(".discord-btn");
+  var pop = document.querySelector(".discord-pop");
+  var closeBtn = document.querySelector(".discord-close");
+  var copyBtn = document.querySelector(".copy-btn");
+  if (!btn || !pop) return;
+
+  function setOpen(open) {
+    pop.hidden = !open;
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  btn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    setOpen(pop.hidden);
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setOpen(false);
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    if (pop.hidden) return;
+    if (pop.contains(e.target) || e.target === btn) return;
+    setOpen(false);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !pop.hidden) setOpen(false);
+  });
+
+  /* copy */
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var text = copyBtn.getAttribute("data-copy") || "";
+      var original = copyBtn.textContent;
+
+      function done() {
+        copyBtn.textContent = "Copied";
+        setTimeout(function () { copyBtn.textContent = original; }, 1200);
+      }
+
+      function fallback() {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); done(); } catch (err) {}
+        document.body.removeChild(ta);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else {
+        fallback();
+      }
+    });
+  }
+})();
 
 /* ---------- page switching ---------- */
 var PAGES = ["home", "gallery"];
