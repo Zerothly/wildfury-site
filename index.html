@@ -3,18 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fbf7ee">
 <title>House of Wildfury</title>
 <style>
+  :root {
+    --bg:      #fbf7ee;
+    --bg-soft: #f4ecdd;
+    --bg-card: #fffdf8;
+    --text:    #3d3428;
+    --muted:   #8a7d6a;
+    --line:    #e7dcc6;
+    --accent:  #a8845a;
+  }
+
   * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
 
   body {
     margin: 0;
-    background: #fff;
-    color: #111;
-    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
 
-  a { color: #111; }
+  h1, h2, h3 {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
   .wrap {
     max-width: 720px;
@@ -22,46 +42,81 @@
     padding: 0 20px;
   }
 
-  /* hero banner */
+  /* ---------- hero ---------- */
   .hero {
-    border-bottom: 1px solid #ddd;
-    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--line);
+    padding: 44px 0 32px;
+    background: var(--bg);
+  }
+
+  .eyebrow {
+    margin: 0 0 10px;
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
 
   .hero h1 {
-    margin: 0;
-    font-size: 1.75rem;
+    margin: 0 0 14px;
+    font-size: 1.85rem;
+    line-height: 1.2;
+  }
+
+  .sonas {
+    margin: 0 0 18px;
+    font-size: .95rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .sonas span {
+    display: block;
+  }
+
+  .sonas b {
+    color: var(--text);
     font-weight: 600;
-    letter-spacing: -0.01em;
   }
 
-  .hero p {
-    margin: 8px 0 0;
-    color: #777;
-    font-size: .9rem;
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    margin: 0;
+    font-size: .92rem;
   }
 
-  /* pages */
+  .contact a {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+  }
+
+  .contact a:hover {
+    border-bottom-color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ---------- pages ---------- */
   .page { display: none; }
   .page.on { display: block; }
 
   h2 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 48px 0 0;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #ddd;
+    font-size: 1.15rem;
+    margin: 52px 0 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
   }
 
   h3 {
     font-size: 1rem;
-    font-weight: 600;
-    margin: 12px 0 4px;
+    margin: 12px 0 2px;
   }
 
   p { margin: 12px 0; }
 
-  .muted { color: #777; font-size: .875rem; }
+  .muted { color: var(--muted); font-size: .875rem; }
+  .lede  { color: var(--muted); font-size: .95rem; max-width: 58ch; }
 
   .row {
     display: flex;
@@ -70,12 +125,19 @@
     gap: 16px;
   }
 
-  /* family */
+  /* ---------- characters ---------- */
   .family {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 20px;
+    gap: 22px;
+    margin-top: 22px;
+  }
+
+  .person {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px 14px 18px;
   }
 
   .person img {
@@ -83,17 +145,37 @@
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    background: #f2f2f2;
-    border: 1px solid #ddd;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
   }
 
-  .person p { margin: 6px 0 0; }
+  .person h3 { margin-top: 14px; }
 
-  /* gallery */
+  .person .role {
+    margin: 2px 0 0;
+    font-size: .75rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .person .owner {
+    margin: 8px 0 0;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+
+  .person .bio {
+    margin: 10px 0 0;
+    font-size: .9rem;
+    color: var(--muted);
+  }
+
+  /* ---------- gallery ---------- */
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 10px;
     margin-top: 20px;
   }
 
@@ -101,10 +183,11 @@
     display: block;
     padding: 0;
     margin: 0;
-    border: 1px solid #ddd;
-    background: #f2f2f2;
+    border: 1px solid var(--line);
+    background: var(--bg-soft);
     cursor: pointer;
     overflow: hidden;
+    border-radius: 3px;
   }
 
   .tile img {
@@ -114,15 +197,15 @@
     object-fit: cover;
   }
 
-  .tile:hover { border-color: #111; }
-  .tile:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+  .tile:hover { border-color: var(--accent); }
+  .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  /* lightbox */
+  /* ---------- lightbox ---------- */
   .lb {
     position: fixed;
     inset: 0;
     display: none;
-    background: #fff;
+    background: var(--bg);
     z-index: 10;
   }
 
@@ -134,28 +217,34 @@
     max-height: calc(100% - 140px);
     margin: 60px auto 0;
     object-fit: contain;
+    border: 1px solid var(--line);
   }
 
   .lb .cap {
     text-align: center;
     font-size: .875rem;
-    color: #777;
-    margin-top: 14px;
+    color: var(--muted);
+    margin-top: 16px;
   }
 
   .lb .bar {
     text-align: center;
-    margin-top: 8px;
+    margin-top: 10px;
   }
 
   .lb button {
     font: inherit;
-    color: #111;
+    color: var(--text);
     background: none;
     border: 0;
     padding: 4px 10px;
     cursor: pointer;
-    text-decoration: underline;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .lb button:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
   .lb .close {
@@ -164,27 +253,48 @@
     right: 20px;
   }
 
+  /* ---------- footer ---------- */
   footer {
-    border-top: 1px solid #ddd;
-    margin-top: 72px;
-    padding: 20px 0 40px;
-    font-size: .8125rem;
-    color: #888;
+    border-top: 1px solid var(--line);
+    margin-top: 80px;
+    padding: 24px 0 44px;
+    font-size: .8rem;
+    color: var(--muted);
   }
 
+  footer .wrap {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- mobile ---------- */
   @media (max-width: 560px) {
-    .family { grid-template-columns: 1fr; gap: 32px; }
-    .grid { grid-template-columns: repeat(2, 1fr); }
-    .hero { padding: 36px 0 32px; }
+    .family { grid-template-columns: 1fr; gap: 20px; }
+    .grid   { grid-template-columns: repeat(2, 1fr); }
+    .hero   { padding: 32px 0 26px; }
+    .hero h1 { font-size: 1.55rem; }
   }
 </style>
 </head>
 <body>
 
+<!-- ============ HERO ============ -->
 <header class="hero">
   <div class="wrap">
-    <h1>House of Wildfury</h1>
-    <p>Placeholder 000</p>
+    <p class="eyebrow">House of Wildfury</p>
+    <h1>Kallizto &amp; Zerothly</h1>
+    <p class="sonas">
+      <span><b>Kallizto</b> &nbsp;·&nbsp; Starzura, Wolfa</span>
+      <span><b>Zerothly</b> &nbsp;·&nbsp; Cinder</span>
+    </p>
+    <p class="contact">
+      <a href="#">Telegram</a>
+      <a href="#">Discord</a>
+      <a href="#">Bluesky</a>
+      <a href="#">Email</a>
+    </p>
   </div>
 </header>
 
@@ -193,15 +303,17 @@
   <!-- ===== Page 1 ===== -->
   <section class="page" data-page="home">
 
-    <h2 style="margin-top:40px;border:0;padding:0;">Welcome</h2>
-
+    <h2>Welcome</h2>
+    <p class="lede">
+      Placeholder 000 — short intro line about the two of us.
+    </p>
     <p>
       First of all!, Thanks to
       <a href="https://alfyn.page/">Alfyn</a>
       for big help in setting up our site!
     </p>
 
-    <h2>Family</h2>
+    <h2>Characters</h2>
     <div class="family" id="family"></div>
 
     <h2>
@@ -217,7 +329,7 @@
   <!-- ===== Page 2 ===== -->
   <section class="page" data-page="gallery">
 
-    <h2 style="margin-top:40px;border:0;padding:0;">
+    <h2>
       <span class="row">
         <span>Gallery</span>
         <a class="muted" href="#home">Back</a>
@@ -230,9 +342,13 @@
 </main>
 
 <footer>
-  <div class="wrap">House of Wildfury</div>
+  <div class="wrap">
+    <span>House of Wildfury</span>
+    <span>Placeholder 018</span>
+  </div>
 </footer>
 
+<!-- ============ LIGHTBOX ============ -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image">
   <button class="close" id="lbClose">Close</button>
   <img id="lbImg" alt="">
@@ -247,20 +363,18 @@
 /* ---------------------------------------------------------------------
    Pictures
 
-   img1, img2, img3 are reserved for family pictures (not used yet).
+   img1, img2, img3 are reserved for character portraits (below).
+   Gallery images live in the folder "Dragon cat pretty good".
 
-   Gallery images pull from the GitHub repository:
-   https://github.com/Zerothly/wildfury-site/tree/main/Dragon%20cat%20pretty%20good
-
-   Both galleries read from this one list, so you only edit it here.
+   If you rename or move the folder, update IMAGE_FOLDER.
    --------------------------------------------------------------------- */
 var IMAGE_FOLDER = "Dragon cat pretty good/";
 
 var IMAGES = [
-  /* --- Family pictures (reserved, not shown in gallery yet) --- */
-  { file: "img1.jpg", title: "Placeholder 001", who: "Kal"   },
-  { file: "img2.jpg", title: "Placeholder 002", who: "Zero"  },
-  { file: "img3.jpg", title: "Placeholder 003", who: "Wolfa" },
+  /* --- Character portraits (reserved slots) --- */
+  { file: "img1.jpg", title: "Starzura", who: "Starzura" },
+  { file: "img2.jpg", title: "Wolfa",    who: "Wolfa"    },
+  { file: "img3.jpg", title: "Cinder",   who: "Cinder"   },
 
   /* --- Dragon cat gallery --- */
   { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_1.PNG",                  title: "Placeholder 004", who: "Ninoto" },
@@ -275,15 +389,32 @@ var IMAGES = [
   { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",               title: "Placeholder 013", who: "Ninoto" }
 ];
 
-/* How many pictures the small gallery on page 1 shows.
-   Starts after the 3 family slots, so 3 + 6 = 9 entries total. */
-var MINI_COUNT = 9;
+/* How many pictures the mini gallery on page 1 shows */
+var MINI_COUNT = 6;
 
-/* Family members. "who" must match the "who" in IMAGES above. */
-var FAMILY = [
-  { name: "Kal",   who: "Kal",   bio: "Placeholder 014" },
-  { name: "Zero",  who: "Zero",  bio: "Placeholder 015" },
-  { name: "Wolfa", who: "Wolfa", bio: "Placeholder 016" }
+/* Characters. "who" must match the "who" in IMAGES above. */
+var CHARACTERS = [
+  {
+    name:  "Starzura",
+    role:  "Prince",
+    owner: "Kallizto",
+    who:   "Starzura",
+    bio:   "Placeholder 014"
+  },
+  {
+    name:  "Wolfa",
+    role:  "Placeholder",
+    owner: "Kallizto",
+    who:   "Wolfa",
+    bio:   "Placeholder 015"
+  },
+  {
+    name:  "Cinder",
+    role:  "Knight",
+    owner: "Zerothly",
+    who:   "Cinder",
+    bio:   "Placeholder 016"
+  }
 ];
 
 /* ---------------------------------------------------------------------
@@ -296,8 +427,8 @@ function $$(sel, root) { return Array.prototype.slice.call((root || document).qu
 function placeholder(name) {
   var svg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">' +
-      '<rect width="100%" height="100%" fill="#f2f2f2"/>' +
-      '<text x="50%" y="50%" fill="#999" font-family="sans-serif" font-size="40" ' +
+      '<rect width="100%" height="100%" fill="#f4ecdd"/>' +
+      '<text x="50%" y="50%" fill="#a8845a" font-family="sans-serif" font-size="38" ' +
         'text-anchor="middle" dominant-baseline="middle">' + name + '</text>' +
     '</svg>';
   return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
@@ -326,10 +457,10 @@ function tile(item, index) {
   return b;
 }
 
-function drawFamily() {
+function drawCharacters() {
   var box = $("#family");
   box.innerHTML = "";
-  FAMILY.forEach(function (m) {
+  CHARACTERS.forEach(function (m) {
     var found = null;
     for (var i = 0; i < IMAGES.length; i++) {
       if (IMAGES[i].who === m.who) { found = IMAGES[i]; break; }
@@ -343,10 +474,21 @@ function drawFamily() {
     var h = document.createElement("h3");
     h.textContent = m.name;
 
+    var role = document.createElement("p");
+    role.className = "role";
+    role.textContent = m.role;
+
+    var owner = document.createElement("p");
+    owner.className = "owner";
+    owner.textContent = m.owner;
+
     var bio = document.createElement("p");
+    bio.className = "bio";
     bio.textContent = m.bio;
 
     el.appendChild(h);
+    el.appendChild(role);
+    el.appendChild(owner);
     el.appendChild(bio);
     box.appendChild(el);
   });
@@ -358,15 +500,13 @@ function drawGalleries() {
   mini.innerHTML = "";
   full.innerHTML = "";
 
-  /* Only show the Dragon cat images (skip the 3 reserved family slots) */
   var galleryItems = IMAGES.filter(function (item) {
     return item.who === "Ninoto";
   });
 
   galleryItems.forEach(function (item, i) {
-    /* Find the original index in IMAGES for the lightbox */
     var originalIndex = IMAGES.indexOf(item);
-    if (i < MINI_COUNT - 3) mini.appendChild(tile(item, originalIndex));
+    if (i < MINI_COUNT) mini.appendChild(tile(item, originalIndex));
     full.appendChild(tile(item, originalIndex));
   });
 
@@ -378,7 +518,7 @@ function drawGalleries() {
   }
 }
 
-/* Lightbox */
+/* ---------- lightbox ---------- */
 var lb = $("#lb"), lbImg = $("#lbImg"), lbCap = $("#lbCap"), at = 0;
 
 function openLb(i) {
@@ -406,7 +546,6 @@ function showLb() {
 }
 
 function step(n) {
-  /* Only step through gallery items (skip reserved family slots) */
   var galleryIndices = [];
   for (var i = 0; i < IMAGES.length; i++) {
     if (IMAGES[i].who === "Ninoto") galleryIndices.push(i);
@@ -432,7 +571,7 @@ document.addEventListener("keydown", function (e) {
   if (e.key === "ArrowRight") step(1);
 });
 
-/* Page switching */
+/* ---------- page switching ---------- */
 var PAGES = ["home", "gallery"];
 
 function showPage(id) {
@@ -453,7 +592,7 @@ function route() {
   showPage("home");
 }
 
-drawFamily();
+drawCharacters();
 drawGalleries();
 route();
 window.addEventListener("hashchange", route);
