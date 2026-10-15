@@ -45,7 +45,7 @@
   /* ---------- hero ---------- */
   .hero {
     border-bottom: 1px solid var(--line);
-    padding: 44px 0 32px;
+    padding: 52px 0 40px;
     background: var(--bg);
   }
 
@@ -58,22 +58,13 @@
   }
 
   .hero h1 {
-    margin: 0 0 22px;
+    margin: 0 0 18px;
     font-size: 1.85rem;
     line-height: 1.2;
   }
 
-  /* two-person row */
-  .people {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 32px;
-  }
-
-  .hero-person { min-width: 0; }
-
   .sona {
-    margin: 0 0 6px;
+    margin: 0 0 4px;
     font-size: .95rem;
     color: var(--muted);
   }
@@ -83,12 +74,21 @@
     font-weight: 600;
   }
 
+  /* ---------- contact (now in footer) ---------- */
+  .people {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+  }
+
+  .person-block { min-width: 0; }
+
   .contact {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 6px 12px;
-    margin: 0;
+    margin: 8px 0 0;
     font-size: .92rem;
   }
 
@@ -128,7 +128,7 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 20;
-    min-width: 190px;
+    min-width: 200px;
     max-width: calc(100vw - 40px);
     background: var(--bg-card);
     border: 1px solid var(--line);
@@ -136,6 +136,12 @@
     box-shadow: 0 10px 26px rgba(61, 52, 40, .14);
     padding: 16px 16px 14px;
     text-align: center;
+  }
+
+  /* opens upward — used when the trigger is near the bottom of the page */
+  .discord-pop--up {
+    top: auto;
+    bottom: calc(100% + 10px);
   }
 
   .discord-pop[hidden] { display: none; }
@@ -170,7 +176,8 @@
 
   .discord-close:hover { color: var(--text); }
 
-  .copy-btn {
+  .copy-btn,
+  .open-btn {
     display: block;
     width: 100%;
     font: inherit;
@@ -181,12 +188,18 @@
     border-radius: 4px;
     padding: 6px 10px;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none;
   }
 
-  .copy-btn:hover {
+  .copy-btn:hover,
+  .open-btn:hover {
     border-color: var(--accent);
     color: var(--accent);
+    text-decoration: none;
   }
+
+  .open-btn { margin-top: 6px; }
 
   /* ---------- pages ---------- */
   .page { display: none; }
@@ -297,7 +310,7 @@
     inset: 0;
     display: none;
     background: var(--bg);
-    z-index: 10;
+    z-index: 40;
   }
 
   .lb.on { display: block; }
@@ -348,25 +361,37 @@
   footer {
     border-top: 1px solid var(--line);
     margin-top: 80px;
-    padding: 24px 0 44px;
-    font-size: .8rem;
+    padding: 36px 0 40px;
+    font-size: .9rem;
     color: var(--muted);
   }
 
-  footer .wrap {
+  .footer-head {
+    font-size: 1.15rem;
+    margin: 0 0 22px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .footer-bottom {
     display: flex;
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: .8rem;
+    color: var(--muted);
   }
 
   /* ---------- mobile ---------- */
   @media (max-width: 560px) {
     .family { grid-template-columns: 1fr; gap: 20px; }
     .grid   { grid-template-columns: repeat(2, 1fr); }
-    .hero   { padding: 32px 0 26px; }
+    .hero   { padding: 36px 0 28px; }
     .hero h1 { font-size: 1.55rem; }
-    .people  { grid-template-columns: 1fr; gap: 22px; }
+    .people  { grid-template-columns: 1fr; gap: 28px; }
   }
 </style>
 </head>
@@ -377,44 +402,8 @@
   <div class="wrap">
     <p class="eyebrow">House of Wildfury</p>
     <h1>Kallizto &amp; Zerothly</h1>
-
-    <div class="people">
-
-      <section class="hero-person">
-        <p class="sona"><b>Kallizto</b> · Starzura, Wolfa</p>
-        <p class="contact">
-          <a href="https://x.com/TZCALLISTO">Twitter</a>
-          <a href="https://t.me/Kalliz_Wildfury">Telegram</a>
-          <span class="discord">
-            <button type="button" class="discord-btn" aria-haspopup="true" aria-expanded="false">Discord</button>
-            <span class="discord-pop" hidden>
-              <button type="button" class="discord-close" aria-label="Close">×</button>
-              <code>tzcallizto</code>
-              <button type="button" class="copy-btn" data-copy="tzcallizto">Copy</button>
-            </span>
-          </span>
-          <a href="https://www.facebook.com/kalliz.wildfury">Facebook</a>
-        </p>
-      </section>
-
-      <section class="hero-person">
-        <p class="sona"><b>Zerothly</b> · Cinder</p>
-        <p class="contact">
-          <a href="https://x.com/Zerothly_">Twitter</a>
-          <a href="https://t.me/Zerothly">Telegram</a>
-          <span class="discord">
-            <button type="button" class="discord-btn" aria-haspopup="true" aria-expanded="false">Discord</button>
-            <span class="discord-pop" hidden>
-              <button type="button" class="discord-close" aria-label="Close">×</button>
-              <code>zerothly</code>
-              <button type="button" class="copy-btn" data-copy="zerothly">Copy</button>
-            </span>
-          </span>
-          <a href="https://www.facebook.com/profile.php?id=61576858875404">Facebook</a>
-        </p>
-      </section>
-
-    </div>
+    <p class="sona"><b>Kallizto</b> · Starzura, Wolfa</p>
+    <p class="sona"><b>Zerothly</b> · Cinder</p>
   </div>
 </header>
 
@@ -463,10 +452,57 @@
 
 </main>
 
+<!-- ============ CONTACT (in footer) ============ -->
 <footer>
   <div class="wrap">
-    <span>House of Wildfury</span>
-    <span>Placeholder 018</span>
+
+    <h2 class="footer-head">Find us</h2>
+
+    <div class="people">
+
+      <section class="person-block">
+        <p class="sona"><b>Kallizto</b> · Starzura, Wolfa</p>
+        <p class="contact">
+          <a href="https://x.com/TZCALLISTO">Twitter</a>
+          <a href="https://t.me/Kalliz_Wildfury">Telegram</a>
+          <span class="discord">
+            <button type="button" class="discord-btn" aria-haspopup="true" aria-expanded="false">Discord</button>
+            <span class="discord-pop discord-pop--up" hidden>
+              <button type="button" class="discord-close" aria-label="Close">×</button>
+              <code>tzcallizto</code>
+              <button type="button" class="copy-btn" data-copy="tzcallizto">Copy</button>
+              <a class="open-btn" href="https://discord.com/users/439300469131706379" target="_blank" rel="noopener">Open profile</a>
+            </span>
+          </span>
+          <a href="https://www.facebook.com/kalliz.wildfury">Facebook</a>
+        </p>
+      </section>
+
+      <section class="person-block">
+        <p class="sona"><b>Zerothly</b> · Cinder</p>
+        <p class="contact">
+          <a href="https://x.com/Zerothly_">Twitter</a>
+          <a href="https://t.me/Zerothly">Telegram</a>
+          <span class="discord">
+            <button type="button" class="discord-btn" aria-haspopup="true" aria-expanded="false">Discord</button>
+            <span class="discord-pop discord-pop--up" hidden>
+              <button type="button" class="discord-close" aria-label="Close">×</button>
+              <code>PUT_ZEROTHLY_USERNAME_HERE</code>
+              <button type="button" class="copy-btn" data-copy="PUT_ZEROTHLY_USERNAME_HERE">Copy</button>
+              <a class="open-btn" href="https://discord.com/users/1347292348467380257" target="_blank" rel="noopener">Open profile</a>
+            </span>
+          </span>
+          <a href="#">Facebook</a>
+        </p>
+      </section>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>House of Wildfury</span>
+      <span>Placeholder 018</span>
+    </div>
+
   </div>
 </footer>
 
@@ -670,6 +706,21 @@ document.addEventListener("keydown", function (e) {
 (function () {
   var wrappers = document.querySelectorAll(".discord");
 
+  function setOpen(wrap, open) {
+    var pop = wrap.querySelector(".discord-pop");
+    var btn = wrap.querySelector(".discord-btn");
+    if (!pop || !btn) return;
+    pop.hidden = !open;
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  function closeAll(except) {
+    wrappers.forEach(function (wrap) {
+      if (wrap === except) return;
+      setOpen(wrap, false);
+    });
+  }
+
   wrappers.forEach(function (wrap) {
     var btn      = wrap.querySelector(".discord-btn");
     var pop      = wrap.querySelector(".discord-pop");
@@ -677,35 +728,20 @@ document.addEventListener("keydown", function (e) {
     var copyBtn  = wrap.querySelector(".copy-btn");
     if (!btn || !pop) return;
 
-    function setOpen(open) {
-      pop.hidden = !open;
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-    }
-
     btn.addEventListener("click", function (e) {
       e.stopPropagation();
-      /* close any other open popover first */
-      wrappers.forEach(function (other) {
-        if (other !== wrap) {
-          var op = other.querySelector(".discord-pop");
-          var ob = other.querySelector(".discord-btn");
-          if (op && !op.hidden) {
-            op.hidden = true;
-            if (ob) ob.setAttribute("aria-expanded", "false");
-          }
-        }
-      });
-      setOpen(pop.hidden);
+      closeAll(wrap);
+      setOpen(wrap, pop.hidden);
     });
 
     if (closeBtn) {
       closeBtn.addEventListener("click", function (e) {
         e.stopPropagation();
-        setOpen(false);
+        setOpen(wrap, false);
       });
     }
 
-    /* keep clicks inside the popover from closing it */
+    /* clicks inside the popover shouldn't close it */
     pop.addEventListener("click", function (e) { e.stopPropagation(); });
 
     /* copy */
@@ -739,28 +775,10 @@ document.addEventListener("keydown", function (e) {
     }
   });
 
-  /* close any open popover when clicking outside or pressing Escape */
-  document.addEventListener("click", function () {
-    wrappers.forEach(function (wrap) {
-      var op = wrap.querySelector(".discord-pop");
-      var ob = wrap.querySelector(".discord-btn");
-      if (op && !op.hidden) {
-        op.hidden = true;
-        if (ob) ob.setAttribute("aria-expanded", "false");
-      }
-    });
-  });
-
+  /* close on outside click or Escape */
+  document.addEventListener("click", function () { closeAll(null); });
   document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape") return;
-    wrappers.forEach(function (wrap) {
-      var op = wrap.querySelector(".discord-pop");
-      var ob = wrap.querySelector(".discord-btn");
-      if (op && !op.hidden) {
-        op.hidden = true;
-        if (ob) ob.setAttribute("aria-expanded", "false");
-      }
-    });
+    if (e.key === "Escape") closeAll(null);
   });
 })();
 
