@@ -99,8 +99,6 @@
 
   .theme-toggle svg { display: block; }
 
-  /* light mode → show moon (tap to go dark)
-     dark mode  → show sun  (tap to go light) */
   html[data-theme="light"] .icon-sun  { display: none; }
   html[data-theme="light"] .icon-moon { display: block; }
   html[data-theme="dark"]  .icon-sun  { display: block; }
@@ -122,10 +120,27 @@
     color: var(--accent);
   }
 
-  .hero h1 {
+  .hero-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
     margin: 0 0 18px;
+  }
+
+  .hero-head h1 {
+    margin: 0;
     font-size: 1.85rem;
     line-height: 1.2;
+  }
+
+  .decorative {
+    display: block;
+    height: 42px;
+    width: auto;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    flex-shrink: 0;
   }
 
   .sona {
@@ -293,7 +308,7 @@
     gap: 16px;
   }
 
-  /* ---------- characters ---------- */
+  /* ---------- family cards ---------- */
   .family {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -302,11 +317,25 @@
   }
 
   .person {
+    display: block;
+    color: inherit;
+    text-decoration: none;
     background: var(--bg-card);
     border: 1px solid var(--line);
     border-radius: 4px;
     padding: 14px 14px 18px;
-    transition: background-color .25s ease, border-color .25s ease;
+    transition: background-color .25s ease, border-color .25s ease, transform .2s;
+  }
+
+  .person:hover {
+    border-color: var(--accent);
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  .person:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .person img {
@@ -338,6 +367,67 @@
     margin: 10px 0 0;
     font-size: .9rem;
     color: var(--muted);
+  }
+
+  /* ---------- character page ---------- */
+  .char-hero {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 24px;
+    align-items: center;
+    margin-top: 28px;
+  }
+
+  .char-hero img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    background: var(--bg-soft);
+    border-radius: 4px;
+  }
+
+  .char-hero h1 {
+    margin: 0 0 6px;
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  .char-hero .role {
+    margin: 0;
+    font-size: .75rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .char-hero .owner {
+    margin: 8px 0 0;
+    font-size: .85rem;
+    color: var(--muted);
+  }
+
+  .char-section {
+    margin-top: 24px;
+    padding: 18px 18px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    transition: background-color .25s ease, border-color .25s ease;
+  }
+
+  .char-section h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 1rem;
+  }
+
+  .char-section p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .9rem;
   }
 
   /* ---------- gallery ---------- */
@@ -457,9 +547,12 @@
     .family { grid-template-columns: 1fr; gap: 20px; }
     .grid   { grid-template-columns: repeat(2, 1fr); }
     .hero   { padding: 36px 0 28px; }
-    .hero h1 { font-size: 1.55rem; }
+    .hero-head h1 { font-size: 1.55rem; }
+    .decorative   { height: 34px; }
     .people  { grid-template-columns: 1fr; gap: 28px; }
     .theme-toggle { top: 12px; right: 12px; width: 34px; height: 34px; }
+    .char-hero { grid-template-columns: 1fr; gap: 16px; }
+    .char-hero img { max-width: 180px; }
   }
 </style>
 </head>
@@ -482,8 +575,12 @@
 <header class="hero">
   <div class="wrap">
     <p class="eyebrow">House of Wildfury</p>
-    <h1>Kallizto &amp; Zerothly</h1>
-    <p class="sona"><b>Kallizto</b> · Starzura, Wolfa</p>
+    <div class="hero-head">
+      <h1>Kalliz &amp; Zerothly</h1>
+      <img class="decorative" src="decorative/decorative_chiikawa.PNG" alt=""
+           aria-hidden="true" onerror="this.style.display='none'">
+    </div>
+    <p class="sona"><b>Kalliz</b> · Starzura, Wolfa</p>
     <p class="sona"><b>Zerothly</b> · Cinder</p>
   </div>
 </header>
@@ -495,7 +592,7 @@
 
     <h2>Welcome to Wildfury!</h2>
     <p class="lede">
-      Hey there! We’re the Wildfury : Kallizto and Zerothly, two furries from Thailand.
+      Hey there! We’re the Wildfury : Kalliz and Zerothly, two furries from Thailand.
       This is our shared website, so you’ll find both of us here.
       Thanks for stopping by, and we hope you enjoy your stay!
     </p>
@@ -505,7 +602,7 @@
       for big help in setting up our site!
     </p>
 
-    <h2>Characters</h2>
+    <h2>Family Members</h2>
     <div class="family" id="family"></div>
 
     <h2>
@@ -531,6 +628,11 @@
 
   </section>
 
+  <!-- ===== Page 3 : Character detail (dynamic) ===== -->
+  <section class="page" data-page="character">
+    <div id="characterPage"></div>
+  </section>
+
 </main>
 
 <!-- ============ CONTACT (in footer) ============ -->
@@ -542,7 +644,7 @@
     <div class="people">
 
       <section class="person-block">
-        <p class="sona"><b>Kallizto</b> · Starzura, Wolfa</p>
+        <p class="sona"><b>Kalliz</b> · Starzura, Wolfa</p>
         <p class="contact">
           <a href="https://x.com/TZCALLISTO">Twitter</a>
           <a href="https://t.me/Kalliz_Wildfury">Telegram</a>
@@ -573,7 +675,7 @@
               <a class="open-btn" href="https://discord.com/users/1347292348467380257" target="_blank" rel="noopener">Open profile</a>
             </span>
           </span>
-          <a href="#">Facebook</a>
+          <a href="https://www.facebook.com/profile.php?id=61576858875404">Facebook</a>
         </p>
       </section>
 
@@ -623,9 +725,10 @@
 /* ---------------------------------------------------------------------
    Pictures
 
-   Two folders:
-     FURSONA_FOLDER — fursona portraits (Starzura, Wolfa, Cinder)
-     GALLERY_FOLDER — the Dragon cat gallery
+   Three folders:
+     FURSONA_FOLDER  — fursona portraits (Starzura, Wolfa, Cinder)
+     GALLERY_FOLDER  — the Dragon cat gallery
+     DECORATIVE      — the small strip next to the hero title
 
    Change these if you rename or move the folders.
    --------------------------------------------------------------------- */
@@ -650,12 +753,52 @@ var IMAGES = [
   { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Sketch.PNG",           title: "Placeholder 012", who: "Ninoto" },
   { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",             title: "Placeholder 013", who: "Ninoto" }
 ];
+
 var MINI_COUNT = 6;
 
+/* Characters. `id` is used for the URL hash (#starzura etc.).
+   `who` must match the "who" in IMAGES above.
+   `sections` is what shows on the individual character page. */
 var CHARACTERS = [
-  { name: "Starzura", role: "Prince",      owner: "Kallizto", who: "Starzura", bio: "Placeholder 014" },
-  { name: "Wolfa",    role: "Placeholder", owner: "Kallizto", who: "Wolfa",    bio: "Placeholder 015" },
-  { name: "Cinder",   role: "Knight",      owner: "Zerothly", who: "Cinder",   bio: "Placeholder 016" }
+  {
+    id: "starzura",
+    name: "Starzura",
+    role: "Prince",
+    owner: "Kalliz",
+    who: "Starzura",
+    bio: "Placeholder 014",
+    sections: [
+      { title: "Reference Sheet", body: "Placeholder 019" },
+      { title: "Description",     body: "Placeholder 020" },
+      { title: "Placeholder 021", body: "Placeholder 022" }
+    ]
+  },
+  {
+    id: "wolfa",
+    name: "Wolfa",
+    role: "Placeholder",
+    owner: "Kalliz",
+    who: "Wolfa",
+    bio: "Placeholder 015",
+    sections: [
+      { title: "Reference Sheet", body: "Placeholder 023" },
+      { title: "Description",     body: "Placeholder 024" },
+      { title: "Placeholder 025", body: "Placeholder 026" }
+    ]
+  },
+  {
+    id: "cinder",
+    name: "Cinder",
+    role: "Knight",
+    owner: "Zerothly",
+    who: "Cinder",
+    bio: "Placeholder 016",
+    sections: [
+      { title: "Reference Sheet", body: "Placeholder 027" },
+      { title: "Description",     body: "Placeholder 028" },
+      { title: "Placeholder 029", body: "Placeholder 030" }
+    ]
+  }
 ];
 
 /* ---------------------------------------------------------------------
@@ -690,6 +833,13 @@ function picture(item) {
   return img;
 }
 
+function findImage(who) {
+  for (var i = 0; i < IMAGES.length; i++) {
+    if (IMAGES[i].who === who) return IMAGES[i];
+  }
+  return null;
+}
+
 function tile(item, index) {
   var b = document.createElement("button");
   b.type = "button";
@@ -705,14 +855,12 @@ function drawCharacters() {
   var box = $("#family");
   box.innerHTML = "";
   CHARACTERS.forEach(function (m) {
-    var found = null;
-    for (var i = 0; i < IMAGES.length; i++) {
-      if (IMAGES[i].who === m.who) { found = IMAGES[i]; break; }
-    }
-    if (!found) found = { file: "img1.jpg", title: m.name };
+    var found = findImage(m.who) || { file: "img1.jpg", title: m.name };
 
-    var el = document.createElement("article");
+    var el = document.createElement("a");
     el.className = "person";
+    el.href = "#" + m.id;
+    el.setAttribute("aria-label", "View " + m.name + " details");
     el.appendChild(picture(found));
 
     var h = document.createElement("h3");
@@ -735,6 +883,67 @@ function drawCharacters() {
     el.appendChild(owner);
     el.appendChild(bio);
     box.appendChild(el);
+  });
+}
+
+function drawCharacterPage(id) {
+  var data = null;
+  for (var i = 0; i < CHARACTERS.length; i++) {
+    if (CHARACTERS[i].id === id) { data = CHARACTERS[i]; break; }
+  }
+  if (!data) return;
+
+  var host = $("#characterPage");
+  host.innerHTML = "";
+
+  /* Back row */
+  var back = document.createElement("h2");
+  var backRow = document.createElement("span");
+  backRow.className = "row";
+  var backTitle = document.createElement("span");
+  backTitle.textContent = data.name;
+  var backLink = document.createElement("a");
+  backLink.className = "muted";
+  backLink.href = "#home";
+  backLink.textContent = "Back";
+  backRow.appendChild(backTitle);
+  backRow.appendChild(backLink);
+  back.appendChild(backRow);
+  host.appendChild(back);
+
+  /* Hero: portrait + name/role/owner */
+  var hero = document.createElement("div");
+  hero.className = "char-hero";
+
+  var found = findImage(data.who) || { file: "img1.jpg", title: data.name };
+  hero.appendChild(picture(found));
+
+  var info = document.createElement("div");
+  var h1 = document.createElement("h1");
+  h1.textContent = data.name;
+  var role = document.createElement("p");
+  role.className = "role";
+  role.textContent = data.role;
+  var owner = document.createElement("p");
+  owner.className = "owner";
+  owner.textContent = data.owner;
+  info.appendChild(h1);
+  info.appendChild(role);
+  info.appendChild(owner);
+  hero.appendChild(info);
+  host.appendChild(hero);
+
+  /* Sections (reference sheet, description, etc.) */
+  (data.sections || []).forEach(function (sec) {
+    var s = document.createElement("section");
+    s.className = "char-section";
+    var h2 = document.createElement("h2");
+    h2.textContent = sec.title;
+    var p = document.createElement("p");
+    p.textContent = sec.body;
+    s.appendChild(h2);
+    s.appendChild(p);
+    host.appendChild(s);
   });
 }
 
@@ -894,6 +1103,7 @@ document.addEventListener("keydown", function (e) {
 
 /* ---------- page switching ---------- */
 var PAGES = ["home", "gallery"];
+var CHARACTER_IDS = ["starzura", "wolfa", "cinder"];
 
 function showPage(id) {
   var target = document.querySelector('.page[data-page="' + id + '"]');
@@ -910,6 +1120,12 @@ function route() {
   var id = location.hash.replace(/^#/, "");
   if (!id) { showPage("home"); return; }
   if (PAGES.indexOf(id) > -1) { showPage(id); return; }
+  if (CHARACTER_IDS.indexOf(id) > -1) {
+    drawCharacterPage(id);
+    showPage("character");
+    window.scrollTo(0, 0);
+    return;
+  }
   showPage("home");
 }
 
