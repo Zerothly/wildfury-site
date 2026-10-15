@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fbf7ee">
 <title>House of Wildfury</title>
+
+<script>
+  /* Set theme before paint to avoid a flash */
+  (function () {
+    try {
+      var stored = localStorage.getItem("theme");
+      var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", stored || (prefersDark ? "dark" : "light"));
+    } catch (e) {}
+  })();
+</script>
+
 <style>
-  :root {
+  :root,
+  html[data-theme="light"] {
     --bg:      #fbf7ee;
     --bg-soft: #f4ecdd;
     --bg-card: #fffdf8;
@@ -14,6 +27,18 @@
     --muted:   #8a7d6a;
     --line:    #e7dcc6;
     --accent:  #a8845a;
+    --shadow:  rgba(61, 52, 40, .14);
+  }
+
+  html[data-theme="dark"] {
+    --bg:      #1a1612;
+    --bg-soft: #241e17;
+    --bg-card: #211c15;
+    --text:    #ece4d4;
+    --muted:   #9a8d78;
+    --line:    #383026;
+    --accent:  #d4a878;
+    --shadow:  rgba(0, 0, 0, .5);
   }
 
   * { box-sizing: border-box; }
@@ -25,6 +50,7 @@
     background: var(--bg);
     color: var(--text);
     font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    transition: background-color .25s ease, color .25s ease;
   }
 
   h1, h2, h3 {
@@ -42,11 +68,50 @@
     padding: 0 20px;
   }
 
+  /* ---------- theme toggle ---------- */
+  .theme-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--text);
+    padding: 0;
+    cursor: pointer;
+    z-index: 30;
+    transition: border-color .2s, color .2s, background-color .25s;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .theme-toggle svg { display: block; }
+
+  /* light mode → show moon (tap to go dark)
+     dark mode  → show sun  (tap to go light) */
+  html[data-theme="light"] .icon-sun  { display: none; }
+  html[data-theme="light"] .icon-moon { display: block; }
+  html[data-theme="dark"]  .icon-sun  { display: block; }
+  html[data-theme="dark"]  .icon-moon { display: none; }
+
   /* ---------- hero ---------- */
   .hero {
     border-bottom: 1px solid var(--line);
     padding: 52px 0 40px;
     background: var(--bg);
+    transition: background-color .25s ease, border-color .25s ease;
   }
 
   .eyebrow {
@@ -74,7 +139,7 @@
     font-weight: 600;
   }
 
-  /* ---------- contact (now in footer) ---------- */
+  /* ---------- contact ---------- */
   .people {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -133,12 +198,11 @@
     background: var(--bg-card);
     border: 1px solid var(--line);
     border-radius: 6px;
-    box-shadow: 0 10px 26px rgba(61, 52, 40, .14);
+    box-shadow: 0 10px 26px var(--shadow);
     padding: 16px 16px 14px;
     text-align: center;
   }
 
-  /* opens upward — used when the trigger is near the bottom of the page */
   .discord-pop--up {
     top: auto;
     bottom: calc(100% + 10px);
@@ -242,6 +306,7 @@
     border: 1px solid var(--line);
     border-radius: 4px;
     padding: 14px 14px 18px;
+    transition: background-color .25s ease, border-color .25s ease;
   }
 
   .person img {
@@ -292,6 +357,7 @@
     cursor: pointer;
     overflow: hidden;
     border-radius: 3px;
+    transition: border-color .2s, background-color .25s;
   }
 
   .tile img {
@@ -364,6 +430,7 @@
     padding: 36px 0 40px;
     font-size: .9rem;
     color: var(--muted);
+    transition: border-color .25s ease;
   }
 
   .footer-head {
@@ -392,10 +459,24 @@
     .hero   { padding: 36px 0 28px; }
     .hero h1 { font-size: 1.55rem; }
     .people  { grid-template-columns: 1fr; gap: 28px; }
+    .theme-toggle { top: 12px; right: 12px; width: 34px; height: 34px; }
   }
 </style>
 </head>
 <body>
+
+<!-- ============ THEME TOGGLE ============ -->
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+  <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+  </svg>
+</button>
 
 <!-- ============ HERO ============ -->
 <header class="hero">
@@ -519,6 +600,27 @@
 
 <script>
 /* ---------------------------------------------------------------------
+   Theme toggle
+   --------------------------------------------------------------------- */
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById("themeToggle");
+  if (!btn) return;
+
+  function applyTheme(name) {
+    root.setAttribute("data-theme", name);
+    try { localStorage.setItem("theme", name); } catch (e) {}
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", name === "dark" ? "#1a1612" : "#fbf7ee");
+  }
+
+  btn.addEventListener("click", function () {
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+  });
+})();
+
+/* ---------------------------------------------------------------------
    Pictures
    --------------------------------------------------------------------- */
 var IMAGE_FOLDER = "Dragon cat pretty good/";
@@ -556,10 +658,13 @@ function $(sel, root) { return (root || document).querySelector(sel); }
 function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
 
 function placeholder(name) {
+  var styles = getComputedStyle(document.documentElement);
+  var bg = (styles.getPropertyValue("--bg-soft") || "").trim() || "#f4ecdd";
+  var fg = (styles.getPropertyValue("--accent")  || "").trim() || "#a8845a";
   var svg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">' +
-      '<rect width="100%" height="100%" fill="#f4ecdd"/>' +
-      '<text x="50%" y="50%" fill="#a8845a" font-family="sans-serif" font-size="38" ' +
+      '<rect width="100%" height="100%" fill="' + bg + '"/>' +
+      '<text x="50%" y="50%" fill="' + fg + '" font-family="sans-serif" font-size="38" ' +
         'text-anchor="middle" dominant-baseline="middle">' + name + '</text>' +
     '</svg>';
   return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
@@ -741,10 +846,8 @@ document.addEventListener("keydown", function (e) {
       });
     }
 
-    /* clicks inside the popover shouldn't close it */
     pop.addEventListener("click", function (e) { e.stopPropagation(); });
 
-    /* copy */
     if (copyBtn) {
       copyBtn.addEventListener("click", function () {
         var text = copyBtn.getAttribute("data-copy") || "";
@@ -775,7 +878,6 @@ document.addEventListener("keydown", function (e) {
     }
   });
 
-  /* close on outside click or Escape */
   document.addEventListener("click", function () { closeAll(null); });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") closeAll(null);
