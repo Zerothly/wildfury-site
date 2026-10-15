@@ -622,26 +622,34 @@
 
 /* ---------------------------------------------------------------------
    Pictures
+
+   Two folders:
+     FURSONA_FOLDER — fursona portraits (Starzura, Wolfa, Cinder)
+     GALLERY_FOLDER — the Dragon cat gallery
+
+   Change these if you rename or move the folders.
    --------------------------------------------------------------------- */
-var IMAGE_FOLDER = "Dragon cat pretty good/";
+var FURSONA_FOLDER = "fursona/";
+var GALLERY_FOLDER = "Dragon cat pretty good/";
 
 var IMAGES = [
-  { file: IMAGE_FOLDER + "fursona_starzura_1.png",                 title: "Starzura", who: "Starzura" },
-  { file: IMAGE_FOLDER + "fursona_wolfa_1.png",                    title: "Wolfa",    who: "Wolfa"    },
-  { file: IMAGE_FOLDER + "fursona_zerothly_1.png",                 title: "Cinder",   who: "Cinder"   },
+  /* --- Fursona portraits --- */
+  { file: FURSONA_FOLDER + "fursona_starzura_1.png", title: "Starzura", who: "Starzura" },
+  { file: FURSONA_FOLDER + "fursona_wolfa_1.png",    title: "Wolfa",    who: "Wolfa"    },
+  { file: FURSONA_FOLDER + "fursona_zerothly_1.png", title: "Cinder",   who: "Cinder"   },
 
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_1.PNG",                title: "Placeholder 004", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_2.PNG",                title: "Placeholder 005", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_3.PNG",                title: "Placeholder 006", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Bleh.PNG",             title: "Placeholder 007", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Cute.PNG",             title: "Placeholder 008", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG", title: "Placeholder 009", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Ouch.PNG",             title: "Placeholder 010", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Shy.PNG",              title: "Placeholder 011", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Sketch.PNG",           title: "Placeholder 012", who: "Ninoto" },
-  { file: IMAGE_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",             title: "Placeholder 013", who: "Ninoto" }
+  /* --- Dragon cat gallery --- */
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_1.PNG",                title: "Placeholder 004", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_2.PNG",                title: "Placeholder 005", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_3.PNG",                title: "Placeholder 006", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Bleh.PNG",             title: "Placeholder 007", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Cute.PNG",             title: "Placeholder 008", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG", title: "Placeholder 009", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Ouch.PNG",             title: "Placeholder 010", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Shy.PNG",              title: "Placeholder 011", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Sketch.PNG",           title: "Placeholder 012", who: "Ninoto" },
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",             title: "Placeholder 013", who: "Ninoto" }
 ];
-
 var MINI_COUNT = 6;
 
 var CHARACTERS = [
