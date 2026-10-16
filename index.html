@@ -47,7 +47,6 @@
     --scan:      rgba(26, 36, 24, .035);
     --vignette:  rgba(60, 40, 20, .10);
 
-    /* XP chrome — light */
     --xp-title-1: #0058ee;
     --xp-title-2: #4ba0ff;
     --xp-title-3: #0040b8;
@@ -83,7 +82,6 @@
     --scan:      rgba(255, 200, 64, .008);
     --vignette:  rgba(0, 0, 0, .30);
 
-    /* XP chrome — dark (high-contrast variant) */
     --xp-title-1: #0040a8;
     --xp-title-2: #3a80d8;
     --xp-title-3: #002878;
@@ -128,7 +126,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* CRT scanlines */
   body::before {
     content: "";
     position: fixed;
@@ -144,7 +141,6 @@
     );
   }
 
-  /* CRT vignette — soft dark corners */
   body::after {
     content: "";
     position: fixed;
@@ -282,10 +278,7 @@
     transition: opacity .4s ease, visibility 0s linear .4s;
   }
 
-  .splash-inner {
-    max-width: 780px;
-    width: 100%;
-  }
+  .splash-inner { max-width: 780px; width: 100%; }
 
   .boot-log {
     text-align: left;
@@ -315,9 +308,7 @@
     box-shadow: 0 0 5px var(--good);
   }
 
-  .boot-line.final::before {
-    animation: pulse 1.1s ease-in-out infinite;
-  }
+  .boot-line.final::before { animation: pulse 1.1s ease-in-out infinite; }
 
   @keyframes bootIn {
     from { opacity: 0; transform: translateX(-4px); }
@@ -329,10 +320,7 @@
     50%      { opacity: .45; box-shadow: 0 0 12px var(--good); }
   }
 
-  .splash-content {
-    opacity: 0;
-    transition: opacity .6s ease;
-  }
+  .splash-content { opacity: 0; transition: opacity .6s ease; }
   .splash-content.on { opacity: 1; }
   .splash-content[hidden] { display: none; }
 
@@ -376,10 +364,7 @@
     color: var(--accent);
   }
 
-  .splash-center {
-    text-align: center;
-    min-width: 0;
-  }
+  .splash-center { text-align: center; min-width: 0; }
 
   .splash-title {
     margin: 0 0 12px;
@@ -476,7 +461,6 @@
     flex-shrink: 0;
   }
 
-  /* ---- XP-style buttons (shared) ---- */
   .hdr-btn,
   .theme-toggle,
   .con-btn,
@@ -576,7 +560,8 @@
   .hdr-slot:focus-visible,
   .con-btn:focus-visible,
   .err-btn:focus-visible,
-  .lb button:focus-visible {
+  .lb button:focus-visible,
+  .collection:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
@@ -661,15 +646,10 @@
   }
 
   /* ============================================================
-     D-DAY COUNTER
+     D-DAY
      ============================================================ */
-  .dday {
-    text-align: center;
-  }
-
-  .dday .xp-body {
-    padding: 26px 22px 28px;
-  }
+  .dday { text-align: center; }
+  .dday .xp-body { padding: 26px 22px 28px; }
 
   .dday-readout {
     margin: 0;
@@ -723,9 +703,7 @@
   /* ============================================================
      CON CARD
      ============================================================ */
-  .con-card .xp-body {
-    padding: 22px 22px 22px;
-  }
+  .con-card .xp-body { padding: 22px; }
 
   .con-name {
     margin: 0 0 4px;
@@ -887,16 +865,72 @@
     color: var(--muted);
   }
 
-  .person .owner::before {
-    content: "> ";
-    color: var(--line-2);
-  }
+  .person .owner::before { content: "> "; color: var(--line-2); }
 
   .person .bio {
     margin: 10px 0 0;
     font-size: .82rem;
     color: var(--muted);
     line-height: 1.55;
+  }
+
+  /* ============================================================
+     COLLECTION CARDS
+     ============================================================ */
+  .collections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .collection {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    background: var(--bg-card);
+    border: 2px solid;
+    border-color: var(--xp-bevel-light) var(--xp-bevel-dark) var(--xp-bevel-dark) var(--xp-bevel-light);
+    border-radius: 2px;
+    padding: 10px 10px 14px;
+    box-shadow: 1px 1px 0 var(--xp-bevel-shadow);
+    transition: transform .15s, border-color .15s;
+  }
+
+  .collection:hover {
+    transform: translateY(-2px);
+    border-color: var(--xp-btn-border-hover);
+    text-decoration: none;
+  }
+
+  .collection-cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+  }
+
+  .collection h3 {
+    margin: 12px 0 2px;
+    font-size: .88rem;
+    letter-spacing: .06em;
+  }
+
+  .collection .count {
+    display: block;
+    font-size: .64rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .collection .desc {
+    margin: 8px 0 0;
+    font-size: .8rem;
+    color: var(--muted);
+    line-height: 1.5;
   }
 
   /* ============================================================
@@ -940,9 +974,7 @@
     color: var(--muted);
   }
 
-  .char-section .xp-body {
-    padding: 18px 20px 20px;
-  }
+  .char-section .xp-body { padding: 18px 20px 20px; }
 
   .char-section p {
     margin: 0;
@@ -959,9 +991,7 @@
   /* ============================================================
      404 PAGE
      ============================================================ */
-  .err-wrap .xp-body {
-    padding: 28px 24px 24px;
-  }
+  .err-wrap .xp-body { padding: 28px 24px 24px; }
 
   .err-grid {
     display: grid;
@@ -1029,38 +1059,9 @@
   }
 
   /* ============================================================
-     GALLERY
+     GALLERY GRID (used inside collection pages)
      ============================================================ */
-  .gallery-section {
-    margin-top: 44px;
-  }
-
-  .gallery-section:first-child {
-    margin-top: 20px;
-  }
-
-  .gallery-section-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-    margin: 0;
-  }
-
-  .gallery-section-head h3 {
-    margin: 0;
-    font-size: .78rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-  }
-
-  .gallery-section-head .count {
-    font-size: .66rem;
-    letter-spacing: .14em;
-    color: var(--muted);
-  }
+  .gallery-section { margin-top: 30px; }
 
   .grid {
     display: grid;
@@ -1188,11 +1189,7 @@
     line-height: 1.55;
   }
 
-  .lb .bar {
-    flex: 0 0 auto;
-    text-align: center;
-    margin: 0;
-  }
+  .lb .bar { flex: 0 0 auto; text-align: center; margin: 0; }
 
   .lb .close {
     position: absolute;
@@ -1244,9 +1241,7 @@
     outline-offset: 3px;
   }
 
-  .term-toggle-cursor {
-    animation: blink 1.1s step-end infinite;
-  }
+  .term-toggle-cursor { animation: blink 1.1s step-end infinite; }
 
   .term-panel {
     position: fixed;
@@ -1520,10 +1515,7 @@
     text-transform: uppercase;
   }
 
-  .sona b {
-    color: var(--text);
-    font-weight: 700;
-  }
+  .sona b { color: var(--text); font-weight: 700; }
 
   .contact {
     display: flex;
@@ -1711,6 +1703,7 @@
     .taskbar { display: none; }
 
     .family { grid-template-columns: 1fr; gap: 18px; }
+    .collections { grid-template-columns: 1fr; gap: 14px; }
     .grid   { grid-template-columns: repeat(2, 1fr); }
 
     .hdr-inner { padding: 10px 16px; gap: 10px; }
@@ -1925,11 +1918,11 @@
         <a class="muted" href="#gallery">View all →</a>
       </span>
     </h2>
-    <div id="mini"></div>
+    <div class="collections" id="mini"></div>
 
   </section>
 
-  <!-- ===== GALLERY ===== -->
+  <!-- ===== GALLERY (collection list) ===== -->
   <section class="page" data-page="gallery">
     <h2>
       <span class="row">
@@ -1937,7 +1930,12 @@
         <a class="muted" href="#home">← Back</a>
       </span>
     </h2>
-    <div id="full"></div>
+    <div class="collections" id="full"></div>
+  </section>
+
+  <!-- ===== COLLECTION (dynamic) ===== -->
+  <section class="page" data-page="collection">
+    <div id="collectionPage"></div>
   </section>
 
   <!-- ===== CHARACTER (dynamic) ===== -->
@@ -2232,6 +2230,10 @@
 var FURSONA_FOLDER = "fursona/";
 var GALLERY_FOLDER = "Dragon cat pretty good/";
 
+/* ------------------------------------------------------------------
+   Each image has a `cat` field matching a COLLECTIONS id below.
+   "portrait" is a reserved category for character cards.
+   ------------------------------------------------------------------ */
 var IMAGES = [
   { file: FURSONA_FOLDER + "fursona_starzura_1.png", title: "Starzura", who: "Starzura", cat: "portrait" },
   { file: FURSONA_FOLDER + "fursona_wolfa_1.png",    title: "Wolfa",    who: "Wolfa",    cat: "portrait" },
@@ -2269,16 +2271,60 @@ var IMAGES = [
     artist: "Placeholder 058", date: "Placeholder 059", desc: "Placeholder 060" }
 ];
 
-var GALLERY_SECTIONS = [
-  { id: "dragon-cat",  title: "Dragon Cat Series" },
-  { id: "solo",        title: "Solo Art" },
-  { id: "couple",      title: "Couple Art" },
-  { id: "sketches",    title: "Sketches" },
-  { id: "commissions", title: "Commissions" },
-  { id: "misc",        title: "Misc" }
+/* ------------------------------------------------------------------
+   Collections shown in the gallery.
+   `id` must match the `cat` on each image.
+
+   Fields:
+     id     — matches IMAGES[].cat
+     title  — display name (shown as heading, in filename form)
+     desc   — one-line description shown under the title
+     cover  — optional. Path to a custom cover image. If omitted,
+              the first image in the collection is used.
+   ------------------------------------------------------------------ */
+var COLLECTIONS = [
+  {
+    id:    "dragon-cat",
+    title: "Dragon Cat Series",
+    desc:  "Placeholder 061",
+    cover: "Dragon cat pretty good/Ninoto_Dragon_Sit_Smug.PNG"
+  },
+  {
+    id:    "solo",
+    title: "Solo Art",
+    desc:  "Placeholder 062",
+    cover: null
+  },
+  {
+    id:    "couple",
+    title: "Couple Art",
+    desc:  "Placeholder 063",
+    cover: null
+  },
+  {
+    id:    "sketches",
+    title: "Sketches",
+    desc:  "Placeholder 064",
+    cover: null
+  },
+  {
+    id:    "commissions",
+    title: "Commissions",
+    desc:  "Placeholder 065",
+    cover: null
+  },
+  {
+    id:    "misc",
+    title: "Misc",
+    desc:  "Placeholder 066",
+    cover: null
+  }
 ];
 
-var MINI_COUNT = 6;
+var COLLECTION_IDS = COLLECTIONS.map(function (c) { return c.id; });
+
+/* How many collections to show on the home page mini preview */
+var MINI_COUNT = 4;
 
 var CHARACTERS = [
   {
@@ -2322,7 +2368,6 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
-/* Build the small XP window control cluster (decorative) */
 function makeXpControls() {
   var wrap = document.createElement("span");
   wrap.className = "xp-controls";
@@ -2337,7 +2382,6 @@ function makeXpControls() {
   return wrap;
 }
 
-/* Build an XP title bar */
 function makeXpTitlebar(text) {
   var tb = document.createElement("div");
   tb.className = "xp-titlebar";
@@ -2383,20 +2427,77 @@ function findImage(who) {
   return null;
 }
 
-function galleryItems() {
-  return IMAGES.filter(function (item) {
-    return item.cat && item.cat !== "portrait";
+function findCollection(id) {
+  for (var i = 0; i < COLLECTIONS.length; i++) {
+    if (COLLECTIONS[i].id === id) return COLLECTIONS[i];
+  }
+  return null;
+}
+
+function itemsInCollection(id) {
+  return IMAGES.filter(function (item) { return item.cat === id; });
+}
+
+function collectionsWithItems() {
+  return COLLECTIONS.filter(function (c) {
+    return itemsInCollection(c.id).length > 0;
   });
 }
 
-function tile(item) {
+/* Build a clickable collection card (used on home + gallery pages) */
+function collectionCard(col) {
+  var items = itemsInCollection(col.id);
+
+  var a = document.createElement("a");
+  a.className = "collection";
+  a.href = "#" + col.id;
+  a.setAttribute("aria-label", "Open collection: " + col.title);
+
+  /* cover — custom, or the first image */
+  var cover = null;
+  if (col.cover) {
+    cover = { file: col.cover, title: col.title };
+  } else if (items.length) {
+    cover = items[0];
+  }
+
+  if (cover) {
+    var img = picture(cover);
+    img.className = "collection-cover";
+    a.appendChild(img);
+  }
+
+  var h = document.createElement("h3");
+  h.textContent = col.title;
+  a.appendChild(h);
+
+  var count = document.createElement("span");
+  count.className = "count";
+  count.textContent = items.length + " item" + (items.length === 1 ? "" : "s");
+  a.appendChild(count);
+
+  if (col.desc) {
+    var d = document.createElement("p");
+    d.className = "desc";
+    d.textContent = col.desc;
+    a.appendChild(d);
+  }
+
+  return a;
+}
+
+/* Build a grid tile. `context` is the array of IMAGES indices the
+   lightbox should cycle through when this tile is clicked. */
+function tile(item, context) {
   var b = document.createElement("button");
   b.type = "button";
   b.className = "tile";
   b.title = item.title || item.file;
   b.setAttribute("aria-label", "Open " + (item.title || item.file));
   b.appendChild(picture(item));
-  b.onclick = function () { openLb(IMAGES.indexOf(item)); };
+  b.onclick = function () {
+    openLbIn(context, IMAGES.indexOf(item));
+  };
   return b;
 }
 
@@ -2440,7 +2541,114 @@ function drawCharacters() {
 }
 
 /* ============================================================
-   DRAW: character page (XP windows)
+   DRAW: collection cards (home mini + full gallery)
+   ============================================================ */
+function drawCollectionLists() {
+  var mini = $("#mini");
+  var full = $("#full");
+  if (mini) mini.innerHTML = "";
+  if (full) full.innerHTML = "";
+
+  var visible = collectionsWithItems();
+
+  if (mini) {
+    if (visible.length) {
+      visible.slice(0, MINI_COUNT).forEach(function (col) {
+        mini.appendChild(collectionCard(col));
+      });
+    } else {
+      var p = document.createElement("p");
+      p.className = "muted";
+      p.textContent = "Placeholder 017";
+      mini.appendChild(p);
+    }
+  }
+
+  if (full) {
+    if (visible.length) {
+      visible.forEach(function (col) {
+        full.appendChild(collectionCard(col));
+      });
+    } else {
+      var e = document.createElement("div");
+      e.className = "gallery-empty";
+      e.textContent = "// no gallery entries yet";
+      full.appendChild(e);
+    }
+  }
+}
+
+/* ============================================================
+   DRAW: single collection page
+   ============================================================ */
+function drawCollectionPage(id) {
+  var col = findCollection(id);
+  if (!col) return;
+
+  var host = $("#collectionPage");
+  if (!host) return;
+  host.innerHTML = "";
+
+  var items = itemsInCollection(id);
+
+  /* Back row */
+  var back = document.createElement("div");
+  back.className = "char-back";
+  var backRow = document.createElement("span");
+  backRow.className = "row";
+  var backTitle = document.createElement("span");
+  backTitle.textContent = col.title;
+  backTitle.style.letterSpacing = ".18em";
+  backTitle.style.textTransform = "uppercase";
+  backTitle.style.fontSize = ".82rem";
+  var backLink = document.createElement("a");
+  backLink.className = "muted";
+  backLink.href = "#gallery";
+  backLink.textContent = "← All collections";
+  backRow.appendChild(backTitle);
+  backRow.appendChild(backLink);
+  back.appendChild(backRow);
+  host.appendChild(back);
+
+  /* XP window wrapper */
+  var win = document.createElement("section");
+  win.className = "char-section xp-window";
+  win.appendChild(makeXpTitlebar(col.title + "  [" + items.length + "]"));
+
+  var body = document.createElement("div");
+  body.className = "xp-body";
+
+  if (col.desc) {
+    var d = document.createElement("p");
+    d.className = "muted";
+    d.style.margin = "0 0 16px";
+    d.textContent = col.desc;
+    body.appendChild(d);
+  }
+
+  if (items.length) {
+    /* Lightbox context = indices of just this collection's images */
+    var context = items.map(function (it) { return IMAGES.indexOf(it); });
+
+    var grid = document.createElement("div");
+    grid.className = "grid";
+    items.forEach(function (item) {
+      grid.appendChild(tile(item, context));
+    });
+    body.appendChild(grid);
+  } else {
+    var empty = document.createElement("div");
+    empty.className = "gallery-empty";
+    empty.textContent = "// no entries yet";
+    body.appendChild(empty);
+  }
+
+  win.appendChild(body);
+  host.appendChild(win);
+}
+
+/* ============================================================
+   DRAW: character page
    ============================================================ */
 function drawCharacterPage(id) {
   var data = null;
@@ -2471,7 +2679,6 @@ function drawCharacterPage(id) {
   back.appendChild(backRow);
   host.appendChild(back);
 
-  /* Hero window */
   var hero = document.createElement("div");
   hero.className = "char-hero xp-window";
   hero.appendChild(makeXpTitlebar(data.name.toUpperCase() + ".PROFILE"));
@@ -2499,7 +2706,6 @@ function drawCharacterPage(id) {
   hero.appendChild(heroBody);
   host.appendChild(hero);
 
-  /* Section windows */
   (data.sections || []).forEach(function (sec) {
     var s = document.createElement("section");
     s.className = "char-section xp-window";
@@ -2516,101 +2722,17 @@ function drawCharacterPage(id) {
 }
 
 /* ============================================================
-   DRAW: gallery
-   ============================================================ */
-function sectionBlock(title, items) {
-  var wrap = document.createElement("section");
-  wrap.className = "gallery-section";
-
-  var head = document.createElement("div");
-  head.className = "gallery-section-head";
-  var h = document.createElement("h3");
-  h.textContent = title;
-  var c = document.createElement("span");
-  c.className = "count";
-  c.textContent = items.length + " item" + (items.length === 1 ? "" : "s");
-  head.appendChild(h);
-  head.appendChild(c);
-  wrap.appendChild(head);
-
-  if (items.length) {
-    var grid = document.createElement("div");
-    grid.className = "grid";
-    items.forEach(function (item) {
-      grid.appendChild(tile(item));
-    });
-    wrap.appendChild(grid);
-  } else {
-    var empty = document.createElement("div");
-    empty.className = "gallery-empty";
-    empty.textContent = "// no entries yet";
-    wrap.appendChild(empty);
-  }
-
-  return wrap;
-}
-
-function drawGalleries() {
-  var mini = $("#mini");
-  var full = $("#full");
-  if (mini) mini.innerHTML = "";
-  if (full) full.innerHTML = "";
-
-  var all = galleryItems();
-
-  if (mini) {
-    if (all.length) {
-      var miniGrid = document.createElement("div");
-      miniGrid.className = "grid";
-      all.slice(0, MINI_COUNT).forEach(function (item) {
-        miniGrid.appendChild(tile(item));
-      });
-      mini.appendChild(miniGrid);
-    } else {
-      var p = document.createElement("p");
-      p.className = "muted";
-      p.textContent = "Placeholder 017";
-      mini.appendChild(p);
-    }
-  }
-
-  if (!full) return;
-
-  var anyRendered = false;
-  GALLERY_SECTIONS.forEach(function (sec) {
-    var items = all.filter(function (item) { return item.cat === sec.id; });
-    if (!items.length) return;
-    anyRendered = true;
-    full.appendChild(sectionBlock(sec.title, items));
-  });
-
-  if (!anyRendered) {
-    var empty = document.createElement("div");
-    empty.className = "gallery-empty";
-    empty.style.marginTop = "20px";
-    empty.textContent = "// no gallery entries yet";
-    full.appendChild(empty);
-  }
-}
-
-/* ============================================================
-   LIGHTBOX
+   LIGHTBOX (context-aware)
    ============================================================ */
 var lb = $("#lb"), lbImg = $("#lbImg"), lbCap = $("#lbCap"), at = 0;
+var lbContext = [];
 var lastFocus = null;
 
-function lightboxIndices() {
-  var out = [];
-  for (var i = 0; i < IMAGES.length; i++) {
-    if (IMAGES[i].cat && IMAGES[i].cat !== "portrait") out.push(i);
-  }
-  return out;
-}
-
-function openLb(i) {
-  if (i < 0) return;
+function openLbIn(context, index) {
+  if (!context || !context.length) return;
   lastFocus = document.activeElement;
-  at = i;
+  lbContext = context.slice();
+  at = index;
   showLb();
   lb.classList.add("on");
   document.body.style.overflow = "hidden";
@@ -2648,12 +2770,11 @@ function showLb() {
 }
 
 function step(n) {
-  var indices = lightboxIndices();
-  if (!indices.length) return;
-  var pos = indices.indexOf(at);
+  if (!lbContext.length) return;
+  var pos = lbContext.indexOf(at);
   if (pos === -1) pos = 0;
-  pos = (pos + n + indices.length) % indices.length;
-  at = indices[pos];
+  pos = (pos + n + lbContext.length) % lbContext.length;
+  at = lbContext[pos];
   showLb();
 }
 
@@ -2900,7 +3021,7 @@ document.addEventListener("keydown", function (e) {
       case "ls":
         print("PAGES:", "head");
         print("  home      home page");
-        print("  gallery   gallery");
+        print("  gallery   gallery (collections)");
         print("  starzura  character");
         print("  wolfa     character");
         print("  cinder    character");
@@ -2998,6 +3119,7 @@ function route() {
 
   if (!id) { showPage("home"); updateNav("home"); return; }
   if (PAGES.indexOf(id) > -1) { showPage(id); updateNav(id); return; }
+
   if (CHARACTER_IDS.indexOf(id) > -1) {
     drawCharacterPage(id);
     showPage("character");
@@ -3005,11 +3127,20 @@ function route() {
     window.scrollTo(0, 0);
     return;
   }
+
+  if (COLLECTION_IDS.indexOf(id) > -1) {
+    drawCollectionPage(id);
+    showPage("collection");
+    updateNav("gallery");
+    window.scrollTo(0, 0);
+    return;
+  }
+
   show404(id);
 }
 
 drawCharacters();
-drawGalleries();
+drawCollectionLists();
 route();
 window.addEventListener("hashchange", route);
 </script>
