@@ -28,6 +28,7 @@
     --line:    #e7dcc6;
     --accent:  #a8845a;
     --shadow:  rgba(61, 52, 40, .14);
+    --lb-bg:   rgba(251, 247, 238, .68);
   }
 
   html[data-theme="dark"] {
@@ -39,6 +40,7 @@
     --line:    #383026;
     --accent:  #d4a878;
     --shadow:  rgba(0, 0, 0, .5);
+    --lb-bg:   rgba(26, 22, 18, .68);
   }
 
   * { box-sizing: border-box; }
@@ -120,8 +122,6 @@
     color: var(--accent);
   }
 
-  /* two columns: text on the left, decorative image on the right.
-     The image column takes whatever space is left over. */
   .hero-top {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
@@ -206,7 +206,6 @@
     position: absolute;
     top: calc(100% + 10px);
     left: 50%;
-    transform: translateX(-50%);
     z-index: 20;
     min-width: 200px;
     max-width: calc(100vw - 40px);
@@ -216,14 +215,28 @@
     box-shadow: 0 10px 26px var(--shadow);
     padding: 16px 16px 14px;
     text-align: center;
+
+    /* animated open/close — overrides the [hidden] default */
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(-6px);
+    transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+  }
+
+  .discord-pop:not([hidden]) {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    transition: opacity .2s ease, transform .2s ease, visibility 0s;
   }
 
   .discord-pop--up {
     top: auto;
     bottom: calc(100% + 10px);
   }
-
-  .discord-pop[hidden] { display: none; }
 
   .discord-pop code {
     display: block;
@@ -282,7 +295,21 @@
 
   /* ---------- pages ---------- */
   .page { display: none; }
-  .page.on { display: block; }
+
+  .page.on {
+    display: block;
+    animation: pageIn .32s cubic-bezier(.22, .61, .36, 1);
+  }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page.on { animation: none; }
+    .lb, .lb img, .discord-pop { transition: none; }
+  }
 
   h2 {
     font-size: 1.15rem;
@@ -447,7 +474,7 @@
     cursor: pointer;
     overflow: hidden;
     border-radius: 3px;
-    transition: border-color .2s, background-color .25s;
+    transition: border-color .2s, background-color .25s, transform .2s;
   }
 
   .tile img {
@@ -457,19 +484,37 @@
     object-fit: cover;
   }
 
-  .tile:hover { border-color: var(--accent); }
+  .tile:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
   .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   /* ---------- lightbox ---------- */
   .lb {
     position: fixed;
     inset: 0;
-    display: none;
-    background: var(--bg);
+    display: block;
     z-index: 40;
+
+    /* blurred translucent backdrop, colour from the current theme */
+    background: var(--lb-bg);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+
+    /* hidden state — fades out smoothly */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .28s ease, visibility 0s linear .28s;
   }
 
-  .lb.on { display: block; }
+  .lb.on {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity .28s ease, visibility 0s;
+  }
 
   .lb img {
     display: block;
@@ -478,12 +523,18 @@
     margin: 60px auto 0;
     object-fit: contain;
     border: 1px solid var(--line);
+    background: var(--bg-card);
+
+    transform: scale(.97);
+    transition: transform .32s cubic-bezier(.22, .61, .36, 1);
   }
+
+  .lb.on img { transform: scale(1); }
 
   .lb .cap {
     text-align: center;
     font-size: .875rem;
-    color: var(--muted);
+    color: var(--text);
     margin-top: 16px;
   }
 
@@ -548,7 +599,6 @@
     .grid   { grid-template-columns: repeat(2, 1fr); }
     .hero   { padding: 36px 0 28px; }
 
-    /* Stack the hero: title block first, then the decorative image */
     .hero-top {
       grid-template-columns: 1fr;
       gap: 18px;
@@ -1029,7 +1079,8 @@ document.addEventListener("keydown", function (e) {
     var pop = wrap.querySelector(".discord-pop");
     var btn = wrap.querySelector(".discord-btn");
     if (!pop || !btn) return;
-    pop.hidden = !open;
+    if (open) pop.removeAttribute("hidden");
+    else pop.setAttribute("hidden", "");
     btn.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
@@ -1050,7 +1101,7 @@ document.addEventListener("keydown", function (e) {
     btn.addEventListener("click", function (e) {
       e.stopPropagation();
       closeAll(wrap);
-      setOpen(wrap, pop.hidden);
+      setOpen(wrap, pop.hasAttribute("hidden"));
     });
 
     if (closeBtn) {
@@ -1107,7 +1158,13 @@ function showPage(id) {
   if (!target) return false;
   var changed = !target.classList.contains("on");
 
-  $$(".page").forEach(function (p) { p.classList.toggle("on", p === target); });
+  $$(".page").forEach(function (p) {
+    p.classList.remove("on");
+  });
+
+  /* force the fade-in animation to restart each time */
+  void target.offsetWidth;
+  target.classList.add("on");
 
   if (changed) window.scrollTo(0, 0);
   return true;
