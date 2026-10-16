@@ -6,6 +6,21 @@
 <meta name="theme-color" content="#0a0806">
 <title>House of Wildfury</title>
 
+<!-- ============ OPEN GRAPH ============ -->
+<!-- Replace example.com and the preview image URL with your real ones -->
+<meta property="og:type"        content="website">
+<meta property="og:title"       content="House of Wildfury">
+<meta property="og:description" content="Placeholder OG description">
+<meta property="og:image"       content="https://example.com/og-preview.jpg">
+<meta property="og:url"         content="https://example.com/">
+<meta name="twitter:card"       content="summary_large_image">
+<meta name="twitter:title"      content="House of Wildfury">
+<meta name="twitter:description" content="Placeholder OG description">
+<meta name="twitter:image"      content="https://example.com/og-preview.jpg">
+
+<!-- ============ FAVICON ============ -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦖</text></svg>">
+
 <script>
   (function () {
     try {
@@ -52,11 +67,17 @@
     --scan:      rgba(255, 176, 0, .022);
   }
 
+  :root {
+    --hdr-h:   64px;
+    --gap-top: 52px;
+    --page-top: calc(var(--hdr-h) + var(--gap-top));
+  }
+
   * { box-sizing: border-box; }
 
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 110px;
+    scroll-padding-top: var(--page-top);
   }
 
   body {
@@ -71,7 +92,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* subtle CRT scanlines across the entire page */
   body::before {
     content: "";
     position: fixed;
@@ -104,7 +124,120 @@
   }
 
   /* ============================================================
-     HEADER  (compact, fixed, shrinks on scroll)
+     SPLASH SCREEN
+     ============================================================ */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--bg);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    cursor: pointer;
+    text-align: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .4s ease, visibility 0s;
+  }
+
+  .splash.gone {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .4s ease, visibility 0s linear .4s;
+  }
+
+  .splash-inner {
+    max-width: 520px;
+    width: 100%;
+  }
+
+  /* boot log */
+  .boot-log {
+    text-align: left;
+    max-width: 380px;
+    margin: 0 auto 26px;
+    font-size: .82rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .boot-line {
+    margin: 0;
+    opacity: 0;
+    animation: bootIn .22s ease forwards;
+  }
+
+  .boot-line::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--good);
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: 1px;
+    box-shadow: 0 0 5px var(--good);
+  }
+
+  @keyframes bootIn {
+    from { opacity: 0; transform: translateX(-4px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* splash content (revealed after boot) */
+  .splash-content {
+    opacity: 0;
+    transition: opacity .4s ease;
+  }
+  .splash-content.on { opacity: 1; }
+  .splash-content[hidden] { display: none; }
+
+  .splash-tag {
+    font-size: .6rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 16px;
+  }
+
+  .splash-img {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin: 0 auto;
+    border: 0;
+    background: var(--bg-soft);
+  }
+
+  .splash-title {
+    margin: 24px 0 8px;
+    font-size: 1.1rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .splash-prompt {
+    margin: 0;
+    font-size: .68rem;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--muted);
+    animation: blink 1.6s step-end infinite;
+  }
+
+  .splash::after {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    border: 1px solid var(--line);
+    pointer-events: none;
+  }
+
+  /* ============================================================
+     HEADER
      ============================================================ */
   .hdr {
     position: fixed;
@@ -117,7 +250,6 @@
     transition: padding .28s ease, border-color .25s ease, background-color .25s ease;
   }
 
-  /* accent line at the top of the header */
   .hdr::before {
     content: "";
     display: block;
@@ -137,7 +269,6 @@
     transition: padding .28s ease;
   }
 
-  /* --- brand (left side) --- */
   .hdr-brand {
     display: flex;
     align-items: center;
@@ -154,13 +285,11 @@
     transition: height .28s ease;
   }
 
-  .hdr-brand-text { min-width: 0; }
-
   .hdr-title {
     display: block;
-    font-size: 1.02rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    letter-spacing: .04em;
+    letter-spacing: .06em;
     text-transform: uppercase;
     color: var(--text);
     text-decoration: none;
@@ -171,19 +300,6 @@
   }
   .hdr-title:hover { text-decoration: none; color: var(--accent); }
 
-  .hdr-sub {
-    margin: 2px 0 0;
-    font-size: .72rem;
-    letter-spacing: .04em;
-    color: var(--muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: opacity .2s ease, max-height .3s ease;
-    max-height: 20px;
-  }
-
-  /* --- nav (right side) --- */
   .hdr-nav {
     display: flex;
     align-items: center;
@@ -222,7 +338,6 @@
   }
   .hdr-btn.on:hover { color: var(--bg); }
 
-  /* reserved slots for future pages */
   .hdr-slot {
     display: inline-grid;
     place-items: center;
@@ -241,7 +356,6 @@
     border-color: var(--accent);
   }
 
-  /* --- theme toggle --- */
   .theme-toggle {
     display: inline-grid;
     place-items: center;
@@ -274,25 +388,17 @@
   html[data-theme="dark"]  .icon-sun  { display: block; }
   html[data-theme="dark"]  .icon-moon { display: none; }
 
-  /* --- compact state (scrolled) --- */
   .hdr.compact .hdr-inner { padding: 7px 20px; }
   .hdr.compact .hdr-decor { height: 24px; }
-  .hdr.compact .hdr-title { font-size: .9rem; }
-  .hdr.compact .hdr-sub {
-    max-height: 0;
-    opacity: 0;
-    margin: 0;
-    overflow: hidden;
-  }
+  .hdr.compact .hdr-title { font-size: .92rem; }
 
-  /* --- blinking status dot --- */
   .hdr-dot {
     display: inline-block;
     width: 7px;
     height: 7px;
     background: var(--good);
     border-radius: 50%;
-    margin-right: 6px;
+    margin-right: 8px;
     vertical-align: 1px;
     box-shadow: 0 0 6px var(--good);
     animation: blink 2s step-end infinite;
@@ -306,18 +412,9 @@
   /* ============================================================
      MAIN LAYOUT
      ============================================================ */
-  main {
-    padding-top: 120px;
+  main.wrap {
+    padding-top: var(--page-top);
     padding-bottom: 0;
-  }
-
-  /* eyebrow / status line */
-  .eyebrow {
-    margin: 0 0 10px;
-    font-size: .68rem;
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    color: var(--accent);
   }
 
   h2 {
@@ -337,6 +434,8 @@
     font-size: .9rem;
   }
 
+  .page > h2:first-child { margin-top: 0; }
+
   h3 {
     font-size: .85rem;
     letter-spacing: .08em;
@@ -355,18 +454,138 @@
     gap: 16px;
     width: 100%;
   }
-  h2 .row::before { display: none; }
 
   /* ============================================================
-     HOME DECOR (moved out of header)
+     D-DAY COUNTER
      ============================================================ */
-  .home-decor {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin: 4px 0 0;
-    border: 0;
+  .dday {
+    position: relative;
+    margin: 26px 0 0;
+    padding: 26px 22px 28px;
+    background: var(--bg-card);
+    border: 3px solid var(--accent);
+    text-align: center;
   }
+
+  .dday::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid var(--line-2);
+    pointer-events: none;
+  }
+
+  .dday::before {
+    content: "// TOGETHER SINCE 2025-06-14";
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--bg);
+    padding: 0 8px;
+    font-size: .58rem;
+    letter-spacing: .24em;
+    color: var(--accent);
+    z-index: 1;
+  }
+
+  .dday-readout {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dday-days {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .dday-unit {
+    font-size: .58rem;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    align-self: flex-end;
+    padding-bottom: 4px;
+  }
+
+  .dday-sep {
+    color: var(--line-2);
+    font-size: 1rem;
+    align-self: center;
+  }
+
+  .dday-clock {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .dday-sub {
+    margin: 12px 0 0;
+    font-size: .62rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ============================================================
+     TODO NOTICE (fill-in placeholders)
+     ============================================================ */
+  .todo {
+    margin: 14px 0 0;
+    padding: 14px 16px;
+    border: 1px dashed var(--accent);
+    background: var(--bg-card);
+    color: var(--muted);
+    font-size: .78rem;
+    line-height: 1.6;
+    letter-spacing: .02em;
+  }
+
+  .todo::before {
+    content: "⚠ TODO — EDIT ME";
+    display: block;
+    font-size: .58rem;
+    letter-spacing: .24em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .todo strong { color: var(--text); font-weight: 700; }
+
+  .todo ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+
+  .todo li { margin: 3px 0; }
+
+  /* info list used for real content once filled in */
+  .info-list {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .info-list li {
+    margin: 8px 0;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border-left: 3px solid var(--accent);
+    font-size: .84rem;
+    color: var(--text);
+  }
+
+  .info-list li b { color: var(--accent); }
 
   /* ============================================================
      PAGES
@@ -385,9 +604,10 @@
 
   @media (prefers-reduced-motion: reduce) {
     .page.on { animation: none; }
-    .lb, .lb img, .discord-pop, .hdr-inner, .hdr-sub,
-    .hdr-decor, .hdr-title { transition: none; }
-    .hdr-dot { animation: none; }
+    .lb, .lb img, .discord-pop, .hdr-inner,
+    .hdr-decor, .hdr-title, .splash,
+    .splash-content, .boot-line { transition: none; animation: none; }
+    .hdr-dot, .splash-prompt { animation: none; }
   }
 
   /* ============================================================
@@ -464,11 +684,37 @@
      CHARACTER PAGE
      ============================================================ */
   .char-hero {
+    position: relative;
     display: grid;
     grid-template-columns: 160px 1fr;
     gap: 24px;
     align-items: center;
-    margin-top: 26px;
+    margin: 26px 0 0;
+    padding: 24px 22px;
+    background: var(--bg-card);
+    border: 4px solid var(--accent);
+    border-radius: 0;
+  }
+
+  .char-hero::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--line-2);
+    pointer-events: none;
+  }
+
+  .char-hero::before {
+    content: "// UNIT PROFILE";
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: var(--bg);
+    padding: 0 8px;
+    font-size: .58rem;
+    letter-spacing: .24em;
+    color: var(--accent);
+    z-index: 1;
   }
 
   .char-hero img {
@@ -478,7 +724,6 @@
     object-fit: cover;
     border: 1px solid var(--line);
     background: var(--bg-soft);
-    border-radius: 0;
   }
 
   .char-hero h1 {
@@ -503,38 +748,97 @@
   }
 
   .char-section {
-    margin-top: 20px;
-    padding: 16px 16px 18px;
+    position: relative;
+    margin-top: 34px;
+    padding: 22px 22px 24px;
     background: var(--bg-card);
-    border: 1px solid var(--line);
+    border: 3px solid var(--accent);
     border-radius: 0;
     transition: background-color .25s ease, border-color .25s ease;
   }
 
+  .char-section::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid var(--line-2);
+    pointer-events: none;
+  }
+
+  .char-section::before {
+    content: "// SECTION";
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--bg);
+    padding: 0 8px;
+    font-size: .58rem;
+    letter-spacing: .24em;
+    color: var(--accent);
+    z-index: 1;
+  }
+
   .char-section h2 {
-    margin: 0 0 8px;
+    margin: 0 0 10px;
     padding: 0;
     border: 0;
-    font-size: .76rem;
+    font-size: .82rem;
     letter-spacing: .16em;
+    display: block;
   }
-  .char-section h2::before { content: "["; margin-right: 0; color: var(--accent); }
-  .char-section h2::after  { content: "]"; margin-left: 0;  color: var(--accent); }
+  .char-section h2::before { content: none; }
 
   .char-section p {
     margin: 0;
     color: var(--muted);
-    font-size: .84rem;
+    font-size: .86rem;
+  }
+
+  .char-back {
+    margin: 0 0 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
   }
 
   /* ============================================================
      GALLERY
      ============================================================ */
+  .gallery-section {
+    margin-top: 44px;
+  }
+
+  .gallery-section:first-child {
+    margin-top: 20px;
+  }
+
+  .gallery-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    margin: 0;
+  }
+
+  .gallery-section-head h3 {
+    margin: 0;
+    font-size: .78rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .gallery-section-head .count {
+    font-size: .66rem;
+    letter-spacing: .14em;
+    color: var(--muted);
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 16px;
   }
 
   .tile {
@@ -562,17 +866,32 @@
   }
   .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  .gallery-empty {
+    margin: 12px 0 0;
+    padding: 14px 16px;
+    border: 1px dashed var(--line);
+    color: var(--muted);
+    font-size: .78rem;
+    letter-spacing: .08em;
+  }
+
   /* ============================================================
      LIGHTBOX
      ============================================================ */
   .lb {
     position: fixed;
     inset: 0;
-    display: block;
     z-index: 400;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 62px 20px 24px;
     background: var(--lb-bg);
     -webkit-backdrop-filter: blur(16px) saturate(130%);
     backdrop-filter: blur(16px) saturate(130%);
+    overflow: auto;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -588,9 +907,11 @@
 
   .lb img {
     display: block;
-    max-width: calc(100% - 80px);
-    max-height: calc(100% - 150px);
-    margin: 60px auto 0;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100vh - 250px);
+    max-height: calc(100dvh - 250px);
     object-fit: contain;
     border: 1px solid var(--line);
     background: var(--bg-card);
@@ -601,17 +922,44 @@
   .lb.on img { transform: scale(1); }
 
   .lb .cap {
+    flex: 0 0 auto;
+    max-width: 640px;
+    margin: 0;
     text-align: center;
-    font-size: .8rem;
-    letter-spacing: .1em;
     color: var(--text);
-    margin-top: 16px;
+    font-size: .82rem;
+    letter-spacing: .04em;
+  }
+
+  .lb .cap strong {
+    display: block;
+    font-size: .88rem;
+    letter-spacing: .16em;
     text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .lb .cap .meta {
+    display: block;
+    font-size: .68rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  .lb .cap .desc {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: .78rem;
+    line-height: 1.55;
   }
 
   .lb .bar {
+    flex: 0 0 auto;
     text-align: center;
-    margin-top: 12px;
+    margin: 0;
   }
 
   .lb button {
@@ -635,14 +983,20 @@
     background: var(--bg-soft);
   }
 
+  .lb button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   .lb .close {
     position: absolute;
     top: 16px;
     right: 20px;
+    margin: 0;
   }
 
   /* ============================================================
-     CONTACT (footer)
+     CONTACT / FOOTER
      ============================================================ */
   .people {
     display: grid;
@@ -714,7 +1068,7 @@
     min-width: 210px;
     max-width: calc(100vw - 40px);
     background: var(--bg-card);
-    border: 1px solid var(--accent);
+    border: 2px solid var(--accent);
     border-radius: 0;
     box-shadow: 0 10px 0 var(--shadow);
     padding: 18px 16px 14px;
@@ -808,9 +1162,7 @@
 
   .open-btn { margin-top: 6px; }
 
-  /* ============================================================
-     FOOTER
-     ============================================================ */
+  /* ---------- footer ---------- */
   footer {
     border-top: 1px solid var(--line);
     margin-top: 80px;
@@ -852,12 +1204,13 @@
      ============================================================ */
   @media (max-width: 720px) {
     .hdr-slot { display: none; }
-    .hdr-sub  { display: none; }
   }
 
   @media (max-width: 560px) {
-    main { padding-top: 92px; }
-    html { scroll-padding-top: 92px; }
+    :root {
+      --hdr-h:   48px;
+      --gap-top: 44px;
+    }
 
     .family { grid-template-columns: 1fr; gap: 18px; }
     .grid   { grid-template-columns: repeat(2, 1fr); }
@@ -871,12 +1224,38 @@
     .hdr-btn { padding: 5px 8px; font-size: .62rem; letter-spacing: .08em; }
 
     .people  { grid-template-columns: 1fr; gap: 28px; }
-    .char-hero { grid-template-columns: 1fr; gap: 16px; }
+    .char-hero { grid-template-columns: 1fr; gap: 16px; margin-top: 22px; }
     .char-hero img { max-width: 180px; }
+
+    .lb { padding: 56px 12px 18px; gap: 10px; }
+    .lb img {
+      max-height: calc(100vh - 220px);
+      max-height: calc(100dvh - 220px);
+    }
+
+    .dday-days { font-size: 1.6rem; }
+    .dday-clock { font-size: 1.1rem; }
   }
 </style>
 </head>
 <body>
+
+<!-- ============================================================
+     SPLASH — boot sequence, then welcome
+     ============================================================ -->
+<div class="splash" id="splash" role="dialog" aria-label="Welcome">
+  <div class="splash-inner">
+    <div class="boot-log" id="bootLog" aria-hidden="true"></div>
+
+    <div class="splash-content" id="splashContent" hidden>
+      <p class="splash-tag">// SYSTEM READY</p>
+      <img class="splash-img" src="decorative/splash.PNG" alt=""
+           onerror="this.style.display='none'">
+      <h1 class="splash-title">House of Wildfury</h1>
+      <p class="splash-prompt">Click anywhere to enter</p>
+    </div>
+  </div>
+</div>
 
 <!-- ============================================================
      HEADER
@@ -884,24 +1263,19 @@
 <header class="hdr" id="hdr">
   <div class="hdr-inner">
 
-    <!-- brand / left -->
     <div class="hdr-brand">
       <img class="hdr-decor" src="decorative/decorative_chiikawa_2.PNG" alt=""
            aria-hidden="true" onerror="this.style.display='none'">
-      <div class="hdr-brand-text">
-        <a class="hdr-title" href="#home">
-          <span class="hdr-dot" aria-hidden="true"></span>Kalliz &amp; Zerothly
-        </a>
-        <p class="hdr-sub">Kalliz · Starzura, Wolfa &nbsp;//&nbsp; Zerothly · Cinder</p>
-      </div>
+      <a class="hdr-title" href="#home">
+        <span class="hdr-dot" aria-hidden="true"></span>House of Wildfury
+      </a>
     </div>
 
-    <!-- nav / right -->
     <nav class="hdr-nav" aria-label="Primary">
       <a href="#home"    class="hdr-btn" data-nav="home">Home</a>
       <a href="#gallery" class="hdr-btn" data-nav="gallery">Gallery</a>
 
-      <!-- reserved slots for future pages — replace with <a class="hdr-btn">YourPage</a> -->
+      <!-- reserved slots for future pages -->
       <span class="hdr-slot" title="Reserved" aria-hidden="true">+</span>
       <span class="hdr-slot" title="Reserved" aria-hidden="true">+</span>
 
@@ -923,7 +1297,7 @@
 
 <main class="wrap">
 
-  <!-- ===== Page 1 ===== -->
+  <!-- ===== HOME ===== -->
   <section class="page" data-page="home">
 
     <h2>Welcome to Wildfury</h2>
@@ -936,6 +1310,73 @@
       First of all!, Thanks to <a href="https://alfyn.page/">Alfyn</a> for big help in setting up our site!
     </p>
 
+    <!-- D-DAY -->
+    <div class="dday" role="status" aria-live="polite">
+      <p class="dday-readout" id="ddayReadout">
+        <span class="dday-days" id="ddayDays">0000</span>
+        <span class="dday-unit">days</span>
+        <span class="dday-sep">//</span>
+        <span class="dday-clock" id="ddayClock">00:00:00</span>
+      </p>
+      <p class="dday-sub">and counting</p>
+    </div>
+
+    <!-- CON SCHEDULE -->
+    <h2>Con Schedule</h2>
+    <!--
+      ══════════════════════════════════════════════════════════
+        ✏️  EDIT ME — CON SCHEDULE
+        Replace the placeholder block below with your real schedule.
+        Once you have entries, use this format:
+
+        <ul class="info-list">
+          <li><b>Con Name</b> — City, Country · DD–DD Mon YYYY</li>
+          <li><b>Con Name</b> — City, Country · DD–DD Mon YYYY</li>
+        </ul>
+
+        Then delete the .todo block below.
+      ══════════════════════════════════════════════════════════
+    -->
+    <div class="todo">
+      <p><strong>Add your upcoming conventions here.</strong></p>
+      <p>Suggested format — one line per con:</p>
+      <ul>
+        <li><b>Con Name</b> — City, Country · DD–DD Mon YYYY</li>
+      </ul>
+      <p>Example:</p>
+      <ul>
+        <li><b>FurCon XYZ</b> — Bangkok, TH · 12–14 Sep 2026</li>
+      </ul>
+      <p>When you've got real entries, swap this whole box for:</p>
+      <ul>
+        <li><code>&lt;ul class="info-list"&gt; &lt;li&gt;...&lt;/li&gt; &lt;/ul&gt;</code></li>
+      </ul>
+    </div>
+
+    <!-- HOW TO SAY HI -->
+    <h2>How to Say Hi</h2>
+    <!--
+      ══════════════════════════════════════════════════════════
+        ✏️  EDIT ME — BOUNDARIES
+        Fill in your real preferences. Common fields below.
+        Once filled in, replace the .todo block with a
+        <ul class="info-list"> like the one in Con Schedule.
+      ══════════════════════════════════════════════════════════
+    -->
+    <div class="todo">
+      <p><strong>Tell visitors how to approach you.</strong></p>
+      <p>Common things to spell out:</p>
+      <ul>
+        <li><b>Hugs</b> — yes / no / ask first</li>
+        <li><b>Photos</b> — yes / no / ask first / suit only</li>
+        <li><b>Headpats / touching</b> — yes / no / suit only</li>
+        <li><b>Fursuit interactions</b> — anything to know</li>
+        <li><b>Languages</b> — Thai, English, etc.</li>
+        <li><b>Anything else</b> — small talk, drawing, etc.</li>
+      </ul>
+      <p>Delete this box and use <code>&lt;ul class="info-list"&gt;</code> when ready.</p>
+    </div>
+
     <h2>Family Members</h2>
     <div class="family" id="family"></div>
 
@@ -945,24 +1386,22 @@
         <a class="muted" href="#gallery">View all →</a>
       </span>
     </h2>
-    <div class="grid" id="mini"></div>
+    <div id="mini"></div>
 
   </section>
 
-  <!-- ===== Page 2 ===== -->
+  <!-- ===== GALLERY ===== -->
   <section class="page" data-page="gallery">
-
     <h2>
       <span class="row">
         <span>Gallery</span>
         <a class="muted" href="#home">← Back</a>
       </span>
     </h2>
-    <div class="grid" id="full"></div>
-
+    <div id="full"></div>
   </section>
 
-  <!-- ===== Page 3 : Character detail ===== -->
+  <!-- ===== CHARACTER (dynamic) ===== -->
   <section class="page" data-page="character">
     <div id="characterPage"></div>
   </section>
@@ -970,7 +1409,7 @@
 </main>
 
 <!-- ============================================================
-     CONTACT / FOOTER
+     FOOTER
      ============================================================ -->
 <footer>
   <div class="wrap">
@@ -1025,7 +1464,9 @@
   </div>
 </footer>
 
-<!-- ============ LIGHTBOX ============ -->
+<!-- ============================================================
+     LIGHTBOX
+     ============================================================ -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image">
   <button class="close" id="lbClose">Close</button>
   <img id="lbImg" alt="">
@@ -1059,29 +1500,120 @@
 })();
 
 /* ============================================================
-   HEADER: shrink on scroll
+   SPLASH — boot sequence + click to dismiss
+   ============================================================ */
+(function () {
+  var splash = document.getElementById("splash");
+  if (!splash) return;
+
+  var dismissed = false;
+
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+    splash.classList.add("gone");
+    setTimeout(function () {
+      if (splash.parentNode) splash.parentNode.removeChild(splash);
+    }, 500);
+  }
+
+  splash.addEventListener("click", dismiss);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" || e.key === "Enter" || e.key === " ") dismiss();
+  });
+
+  /* --- boot sequence --- */
+  var log     = document.getElementById("bootLog");
+  var content = document.getElementById("splashContent");
+  if (!log || !content) return;
+
+  var lines = [
+    "> INITIALIZING WILDFURY OS...",
+    "> LOADING ASSETS ... OK",
+    "> VERIFYING PACK LINK ... OK",
+    "> READY"
+  ];
+
+  var i = 0;
+
+  function nextLine() {
+    if (dismissed) return;
+
+    if (i >= lines.length) {
+      /* boot finished — swap the log for the welcome content */
+      log.style.display = "none";
+      content.removeAttribute("hidden");
+      requestAnimationFrame(function () { content.classList.add("on"); });
+      return;
+    }
+
+    var p = document.createElement("p");
+    p.className = "boot-line";
+    p.textContent = lines[i];
+    log.appendChild(p);
+    i++;
+    setTimeout(nextLine, 250);
+  }
+
+  setTimeout(nextLine, 200);
+})();
+
+/* ============================================================
+   HEADER shrink on scroll
    ============================================================ */
 (function () {
   var hdr = document.getElementById("hdr");
   if (!hdr) return;
 
   var ticking = false;
-
   function update() {
     var y = window.scrollY || window.pageYOffset || 0;
-    if (y > 30) hdr.classList.add("compact");
-    else        hdr.classList.remove("compact");
+    hdr.classList.toggle("compact", y > 30);
     ticking = false;
   }
-
   window.addEventListener("scroll", function () {
     if (!ticking) {
       window.requestAnimationFrame(update);
       ticking = true;
     }
   }, { passive: true });
-
   update();
+})();
+
+/* ============================================================
+   D-DAY COUNTER
+   Together since 14 June 2025 — ticks every second.
+   ============================================================ */
+(function () {
+  var daysEl  = document.getElementById("ddayDays");
+  var clockEl = document.getElementById("ddayClock");
+  if (!daysEl || !clockEl) return;
+
+  /* Thailand time (UTC+7). Change the timezone if you ever need to. */
+  var START = new Date("2025-06-14T00:00:00+07:00").getTime();
+
+  function pad(n, w) {
+    n = String(n);
+    while (n.length < (w || 2)) n = "0" + n;
+    return n;
+  }
+
+  function tick() {
+    var diff = Date.now() - START;
+    if (diff < 0) diff = 0;
+
+    var totalSec = Math.floor(diff / 1000);
+    var days = Math.floor(totalSec / 86400);
+    var h    = Math.floor((totalSec % 86400) / 3600);
+    var m    = Math.floor((totalSec % 3600) / 60);
+    var s    = totalSec % 60;
+
+    daysEl.textContent  = pad(days, 4);
+    clockEl.textContent = pad(h) + ":" + pad(m) + ":" + pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
 })();
 
 /* ============================================================
@@ -1091,34 +1623,68 @@ var FURSONA_FOLDER = "fursona/";
 var GALLERY_FOLDER = "Dragon cat pretty good/";
 
 var IMAGES = [
-  /* --- Fursona portraits --- */
-  { file: FURSONA_FOLDER + "fursona_starzura_1.png", title: "Starzura", who: "Starzura" },
-  { file: FURSONA_FOLDER + "fursona_wolfa_1.png",    title: "Wolfa",    who: "Wolfa"    },
-  { file: FURSONA_FOLDER + "fursona_zerothly_1.png", title: "Cinder",   who: "Cinder"   },
+  /* --- Fursona portraits (used by the Family cards) --- */
+  { file: FURSONA_FOLDER + "fursona_starzura_1.png", title: "Starzura", who: "Starzura", cat: "portrait" },
+  { file: FURSONA_FOLDER + "fursona_wolfa_1.png",    title: "Wolfa",    who: "Wolfa",    cat: "portrait" },
+  { file: FURSONA_FOLDER + "fursona_zerothly_1.png", title: "Cinder",   who: "Cinder",   cat: "portrait" },
 
-  /* --- Dragon cat gallery --- */
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_1.PNG",                title: "Placeholder 004", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_2.PNG",                title: "Placeholder 005", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_3.PNG",                title: "Placeholder 006", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Bleh.PNG",             title: "Placeholder 007", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Cute.PNG",             title: "Placeholder 008", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG", title: "Placeholder 009", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Ouch.PNG",             title: "Placeholder 010", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Shy.PNG",              title: "Placeholder 011", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Sketch.PNG",           title: "Placeholder 012", who: "Ninoto" },
-  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",             title: "Placeholder 013", who: "Ninoto" }
+  /* --- Dragon Cat series --- */
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_1.PNG",
+    title: "Placeholder 004", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 031", date: "Placeholder 032", desc: "Placeholder 033" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_2.PNG",
+    title: "Placeholder 005", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 034", date: "Placeholder 035", desc: "Placeholder 036" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_3.PNG",
+    title: "Placeholder 006", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 037", date: "Placeholder 038", desc: "Placeholder 039" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Bleh.PNG",
+    title: "Placeholder 007", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 040", date: "Placeholder 041", desc: "Placeholder 042" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Cute.PNG",
+    title: "Placeholder 008", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 043", date: "Placeholder 044", desc: "Placeholder 045" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Ouch_but_u_know_.PNG",
+    title: "Placeholder 009", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 046", date: "Placeholder 047", desc: "Placeholder 048" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Ouch.PNG",
+    title: "Placeholder 010", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 049", date: "Placeholder 050", desc: "Placeholder 051" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Shy.PNG",
+    title: "Placeholder 011", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 052", date: "Placeholder 053", desc: "Placeholder 054" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Sketch.PNG",
+    title: "Placeholder 012", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 055", date: "Placeholder 056", desc: "Placeholder 057" },
+
+  { file: GALLERY_FOLDER + "Ninoto_Dragon_Sit_Smug.PNG",
+    title: "Placeholder 013", who: "Ninoto", cat: "dragon-cat",
+    artist: "Placeholder 058", date: "Placeholder 059", desc: "Placeholder 060" }
+];
+
+var GALLERY_SECTIONS = [
+  { id: "dragon-cat",  title: "Dragon Cat Series" },
+  { id: "solo",        title: "Solo Art" },
+  { id: "couple",      title: "Couple Art" },
+  { id: "sketches",    title: "Sketches" },
+  { id: "commissions", title: "Commissions" },
+  { id: "misc",        title: "Misc" }
 ];
 
 var MINI_COUNT = 6;
 
 var CHARACTERS = [
   {
-    id: "starzura",
-    name: "Starzura",
-    role: "Prince",
-    owner: "Kalliz",
-    who: "Starzura",
-    bio: "Placeholder 014",
+    id: "starzura", name: "Starzura", role: "Prince", owner: "Kalliz",
+    who: "Starzura", bio: "Placeholder 014",
     sections: [
       { title: "Reference Sheet", body: "Placeholder 019" },
       { title: "Description",     body: "Placeholder 020" },
@@ -1126,12 +1692,8 @@ var CHARACTERS = [
     ]
   },
   {
-    id: "wolfa",
-    name: "Wolfa",
-    role: "Placeholder",
-    owner: "Kalliz",
-    who: "Wolfa",
-    bio: "Placeholder 015",
+    id: "wolfa", name: "Wolfa", role: "Placeholder", owner: "Kalliz",
+    who: "Wolfa", bio: "Placeholder 015",
     sections: [
       { title: "Reference Sheet", body: "Placeholder 023" },
       { title: "Description",     body: "Placeholder 024" },
@@ -1139,12 +1701,8 @@ var CHARACTERS = [
     ]
   },
   {
-    id: "cinder",
-    name: "Cinder",
-    role: "Knight",
-    owner: "Zerothly",
-    who: "Cinder",
-    bio: "Placeholder 016",
+    id: "cinder", name: "Cinder", role: "Knight", owner: "Zerothly",
+    who: "Cinder", bio: "Placeholder 016",
     sections: [
       { title: "Reference Sheet", body: "Placeholder 027" },
       { title: "Description",     body: "Placeholder 028" },
@@ -1159,15 +1717,22 @@ var CHARACTERS = [
 function $(sel, root) { return (root || document).querySelector(sel); }
 function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
 function placeholder(name) {
   var styles = getComputedStyle(document.documentElement);
   var bg = (styles.getPropertyValue("--bg-soft") || "").trim() || "#ddd0ac";
   var fg = (styles.getPropertyValue("--accent")  || "").trim() || "#8a4a00";
+  var label = String(name).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   var svg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">' +
       '<rect width="100%" height="100%" fill="' + bg + '"/>' +
-      '<text x="50%" y="50%" fill="' + fg + '" font-family="monospace" font-size="34" ' +
-        'text-anchor="middle" dominant-baseline="middle">' + name + '</text>' +
+      '<text x="50%" y="50%" fill="' + fg + '" font-family="monospace" font-size="30" ' +
+        'text-anchor="middle" dominant-baseline="middle">' + label + '</text>' +
     '</svg>';
   return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 }
@@ -1176,6 +1741,7 @@ function picture(item) {
   var img = document.createElement("img");
   img.alt = item.title || item.file;
   img.loading = "lazy";
+  img.decoding = "async";
   img.src = item.file;
   img.onerror = function () {
     img.onerror = null;
@@ -1191,14 +1757,20 @@ function findImage(who) {
   return null;
 }
 
-function tile(item, index) {
+function galleryItems() {
+  return IMAGES.filter(function (item) {
+    return item.cat && item.cat !== "portrait";
+  });
+}
+
+function tile(item) {
   var b = document.createElement("button");
   b.type = "button";
   b.className = "tile";
   b.title = item.title || item.file;
   b.setAttribute("aria-label", "Open " + (item.title || item.file));
   b.appendChild(picture(item));
-  b.onclick = function () { openLb(index); };
+  b.onclick = function () { openLb(IMAGES.indexOf(item)); };
   return b;
 }
 
@@ -1207,6 +1779,7 @@ function tile(item, index) {
    ============================================================ */
 function drawCharacters() {
   var box = $("#family");
+  if (!box) return;
   box.innerHTML = "";
   CHARACTERS.forEach(function (m) {
     var found = findImage(m.who) || { file: "img1.jpg", title: m.name };
@@ -1251,13 +1824,18 @@ function drawCharacterPage(id) {
   if (!data) return;
 
   var host = $("#characterPage");
+  if (!host) return;
   host.innerHTML = "";
 
-  var back = document.createElement("h2");
+  var back = document.createElement("div");
+  back.className = "char-back";
   var backRow = document.createElement("span");
   backRow.className = "row";
   var backTitle = document.createElement("span");
   backTitle.textContent = data.name;
+  backTitle.style.letterSpacing = ".18em";
+  backTitle.style.textTransform = "uppercase";
+  backTitle.style.fontSize = ".82rem";
   var backLink = document.createElement("a");
   backLink.className = "muted";
   backLink.href = "#home";
@@ -1302,29 +1880,81 @@ function drawCharacterPage(id) {
 }
 
 /* ============================================================
-   DRAW: galleries
+   DRAW: gallery sections
    ============================================================ */
+function sectionBlock(title, items) {
+  var wrap = document.createElement("section");
+  wrap.className = "gallery-section";
+
+  var head = document.createElement("div");
+  head.className = "gallery-section-head";
+  var h = document.createElement("h3");
+  h.textContent = title;
+  var c = document.createElement("span");
+  c.className = "count";
+  c.textContent = items.length + " item" + (items.length === 1 ? "" : "s");
+  head.appendChild(h);
+  head.appendChild(c);
+  wrap.appendChild(head);
+
+  if (items.length) {
+    var grid = document.createElement("div");
+    grid.className = "grid";
+    items.forEach(function (item) {
+      grid.appendChild(tile(item));
+    });
+    wrap.appendChild(grid);
+  } else {
+    var empty = document.createElement("div");
+    empty.className = "gallery-empty";
+    empty.textContent = "// no entries yet";
+    wrap.appendChild(empty);
+  }
+
+  return wrap;
+}
+
 function drawGalleries() {
   var mini = $("#mini");
   var full = $("#full");
-  mini.innerHTML = "";
-  full.innerHTML = "";
+  if (mini) mini.innerHTML = "";
+  if (full) full.innerHTML = "";
 
-  var galleryItems = IMAGES.filter(function (item) {
-    return item.who === "Ninoto";
+  var all = galleryItems();
+
+  if (mini) {
+    if (all.length) {
+      var miniGrid = document.createElement("div");
+      miniGrid.className = "grid";
+      all.slice(0, MINI_COUNT).forEach(function (item) {
+        miniGrid.appendChild(tile(item));
+      });
+      mini.appendChild(miniGrid);
+    } else {
+      var p = document.createElement("p");
+      p.className = "muted";
+      p.textContent = "Placeholder 017";
+      mini.appendChild(p);
+    }
+  }
+
+  if (!full) return;
+
+  var anyRendered = false;
+
+  GALLERY_SECTIONS.forEach(function (sec) {
+    var items = all.filter(function (item) { return item.cat === sec.id; });
+    if (!items.length) return;
+    anyRendered = true;
+    full.appendChild(sectionBlock(sec.title, items));
   });
 
-  galleryItems.forEach(function (item, i) {
-    var originalIndex = IMAGES.indexOf(item);
-    if (i < MINI_COUNT) mini.appendChild(tile(item, originalIndex));
-    full.appendChild(tile(item, originalIndex));
-  });
-
-  if (!galleryItems.length) {
-    var p = document.createElement("p");
-    p.className = "muted";
-    p.textContent = "Placeholder 017";
-    mini.appendChild(p);
+  if (!anyRendered) {
+    var empty = document.createElement("div");
+    empty.className = "gallery-empty";
+    empty.style.marginTop = "20px";
+    empty.textContent = "// no gallery entries yet";
+    full.appendChild(empty);
   }
 }
 
@@ -1332,17 +1962,34 @@ function drawGalleries() {
    LIGHTBOX
    ============================================================ */
 var lb = $("#lb"), lbImg = $("#lbImg"), lbCap = $("#lbCap"), at = 0;
+var lastFocus = null;
+
+function lightboxIndices() {
+  var out = [];
+  for (var i = 0; i < IMAGES.length; i++) {
+    if (IMAGES[i].cat && IMAGES[i].cat !== "portrait") out.push(i);
+  }
+  return out;
+}
 
 function openLb(i) {
+  if (i < 0) return;
+  lastFocus = document.activeElement;
   at = i;
   showLb();
   lb.classList.add("on");
   document.body.style.overflow = "hidden";
+  var closeBtn = $("#lbClose");
+  if (closeBtn) closeBtn.focus({ preventScroll: true });
 }
 
 function closeLb() {
   lb.classList.remove("on");
   document.body.style.overflow = "";
+  if (lastFocus && typeof lastFocus.focus === "function") {
+    lastFocus.focus({ preventScroll: true });
+  }
+  lastFocus = null;
 }
 
 function showLb() {
@@ -1354,20 +2001,25 @@ function showLb() {
   };
   lbImg.src = item.file;
   lbImg.alt = item.title || item.file;
-  lbCap.textContent = item.title || item.file;
+
+  var html = "<strong>" + escapeHtml(item.title || item.file) + "</strong>";
+  var meta = [];
+  if (item.artist) meta.push("ART: " + item.artist);
+  if (item.date)   meta.push(item.date);
+  if (meta.length) html += '<span class="meta">' + escapeHtml(meta.join(" · ")) + "</span>";
+  if (item.desc)   html += '<span class="desc">' + escapeHtml(item.desc) + "</span>";
+
+  lbCap.innerHTML = html;
 }
 
 function step(n) {
-  var galleryIndices = [];
-  for (var i = 0; i < IMAGES.length; i++) {
-    if (IMAGES[i].who === "Ninoto") galleryIndices.push(i);
-  }
-  if (!galleryIndices.length) return;
+  var indices = lightboxIndices();
+  if (!indices.length) return;
 
-  var pos = galleryIndices.indexOf(at);
+  var pos = indices.indexOf(at);
   if (pos === -1) pos = 0;
-  pos = (pos + n + galleryIndices.length) % galleryIndices.length;
-  at = galleryIndices[pos];
+  pos = (pos + n + indices.length) % indices.length;
+  at = indices[pos];
   showLb();
 }
 
@@ -1384,7 +2036,7 @@ document.addEventListener("keydown", function (e) {
 });
 
 /* ============================================================
-   DISCORD POPOVERS (multiple)
+   DISCORD POPOVERS
    ============================================================ */
 (function () {
   var wrappers = document.querySelectorAll(".discord");
@@ -1436,7 +2088,6 @@ document.addEventListener("keydown", function (e) {
           copyBtn.textContent = "Copied";
           setTimeout(function () { copyBtn.textContent = original; }, 1200);
         }
-
         function fallback() {
           var ta = document.createElement("textarea");
           ta.value = text;
@@ -1447,7 +2098,6 @@ document.addEventListener("keydown", function (e) {
           try { document.execCommand("copy"); done(); } catch (err) {}
           document.body.removeChild(ta);
         }
-
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(done, fallback);
         } else {
@@ -1492,16 +2142,8 @@ function showPage(id) {
 function route() {
   var id = location.hash.replace(/^#/, "");
 
-  if (!id) {
-    showPage("home");
-    updateNav("home");
-    return;
-  }
-  if (PAGES.indexOf(id) > -1) {
-    showPage(id);
-    updateNav(id);
-    return;
-  }
+  if (!id) { showPage("home"); updateNav("home"); return; }
+  if (PAGES.indexOf(id) > -1) { showPage(id); updateNav(id); return; }
   if (CHARACTER_IDS.indexOf(id) > -1) {
     drawCharacterPage(id);
     showPage("character");
