@@ -157,10 +157,11 @@
   .boot-log {
     text-align: left;
     max-width: 380px;
-    margin: 0 auto 26px;
+    margin: 0 auto;
     font-size: .82rem;
     line-height: 1.7;
     color: var(--text);
+    min-height: 120px;
   }
 
   .boot-line {
@@ -181,15 +182,25 @@
     box-shadow: 0 0 5px var(--good);
   }
 
+  /* last line — steady, no fade after it lands */
+  .boot-line.final::before {
+    animation: pulse 1.1s ease-in-out infinite;
+  }
+
   @keyframes bootIn {
     from { opacity: 0; transform: translateX(-4px); }
     to   { opacity: 1; transform: none; }
   }
 
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--good); }
+    50%      { opacity: .45; box-shadow: 0 0 12px var(--good); }
+  }
+
   /* splash content (revealed after boot) */
   .splash-content {
     opacity: 0;
-    transition: opacity .4s ease;
+    transition: opacity .6s ease;
   }
   .splash-content.on { opacity: 1; }
   .splash-content[hidden] { display: none; }
@@ -538,54 +549,129 @@
   }
 
   /* ============================================================
-     TODO NOTICE (fill-in placeholders)
+     CON CARD
      ============================================================ */
-  .todo {
-    margin: 14px 0 0;
-    padding: 14px 16px;
-    border: 1px dashed var(--accent);
+  .con-card {
+    position: relative;
+    margin: 22px 0 0;
+    padding: 26px 22px 26px;
     background: var(--bg-card);
-    color: var(--muted);
-    font-size: .78rem;
-    line-height: 1.6;
-    letter-spacing: .02em;
+    border: 3px solid var(--accent);
   }
 
-  .todo::before {
-    content: "⚠ TODO — EDIT ME";
-    display: block;
+  .con-card::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid var(--line-2);
+    pointer-events: none;
+  }
+
+  .con-card::before {
+    content: "// UPCOMING";
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--bg);
+    padding: 0 8px;
     font-size: .58rem;
     letter-spacing: .24em;
     color: var(--accent);
-    margin-bottom: 8px;
+    z-index: 1;
   }
 
-  .todo strong { color: var(--text); font-weight: 700; }
-
-  .todo ul {
-    margin: 8px 0 0;
-    padding-left: 18px;
-  }
-
-  .todo li { margin: 3px 0; }
-
-  /* info list used for real content once filled in */
-  .info-list {
-    margin: 12px 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .info-list li {
-    margin: 8px 0;
-    padding: 10px 14px;
-    background: var(--bg-card);
-    border-left: 3px solid var(--accent);
-    font-size: .84rem;
+  .con-name {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
     color: var(--text);
+    line-height: 1.3;
   }
 
-  .info-list li b { color: var(--accent); }
+  .con-name .con-year {
+    color: var(--accent);
+  }
+
+  .con-sub {
+    margin: 0 0 16px;
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .con-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 18px;
+    margin: 16px 0 0;
+    padding: 14px 0 0;
+    border-top: 1px dashed var(--line-2);
+    font-size: .8rem;
+  }
+
+  .con-meta dt {
+    color: var(--accent);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    font-size: .66rem;
+    align-self: center;
+  }
+
+  .con-meta dd {
+    margin: 0;
+    color: var(--text);
+    letter-spacing: .02em;
+  }
+
+  .con-body {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: .85rem;
+    line-height: 1.7;
+  }
+
+  .con-body p { margin: 0 0 12px; }
+  .con-body p:last-child { margin-bottom: 0; }
+
+  .con-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 0;
+  }
+
+  .con-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    font: inherit;
+    font-size: .68rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color .15s, border-color .15s, background-color .15s;
+  }
+
+  .con-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .con-btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .con-btn.primary:hover {
+    color: var(--bg);
+    filter: brightness(1.08);
+  }
 
   /* ============================================================
      PAGES
@@ -607,7 +693,7 @@
     .lb, .lb img, .discord-pop, .hdr-inner,
     .hdr-decor, .hdr-title, .splash,
     .splash-content, .boot-line { transition: none; animation: none; }
-    .hdr-dot, .splash-prompt { animation: none; }
+    .hdr-dot, .splash-prompt, .boot-line.final::before { animation: none; }
   }
 
   /* ============================================================
@@ -1235,6 +1321,9 @@
 
     .dday-days { font-size: 1.6rem; }
     .dday-clock { font-size: 1.1rem; }
+
+    .con-meta { grid-template-columns: 1fr; gap: 2px 0; }
+    .con-meta dt { margin-top: 8px; }
   }
 </style>
 </head>
@@ -1312,7 +1401,7 @@
 
     <!-- D-DAY -->
     <div class="dday" role="status" aria-live="polite">
-      <p class="dday-readout" id="ddayReadout">
+      <p class="dday-readout">
         <span class="dday-days" id="ddayDays">0000</span>
         <span class="dday-unit">days</span>
         <span class="dday-sep">//</span>
@@ -1323,59 +1412,35 @@
 
     <!-- CON SCHEDULE -->
     <h2>Con Schedule</h2>
-    <!--
-      ══════════════════════════════════════════════════════════
-        ✏️  EDIT ME — CON SCHEDULE
-        Replace the placeholder block below with your real schedule.
-        Once you have entries, use this format:
 
-        <ul class="info-list">
-          <li><b>Con Name</b> — City, Country · DD–DD Mon YYYY</li>
-          <li><b>Con Name</b> — City, Country · DD–DD Mon YYYY</li>
-        </ul>
+    <article class="con-card">
+      <h3 class="con-name">BangkokBeasts <span class="con-year">2026</span>: Furbidden Vault</h3>
+      <p class="con-sub">Nov 14–15 · Mr. FOX Live House, Bangkok</p>
 
-        Then delete the .todo block below.
-      ══════════════════════════════════════════════════════════
-    -->
-    <div class="todo">
-      <p><strong>Add your upcoming conventions here.</strong></p>
-      <p>Suggested format — one line per con:</p>
-      <ul>
-        <li><b>Con Name</b> — City, Country · DD–DD Mon YYYY</li>
-      </ul>
-      <p>Example:</p>
-      <ul>
-        <li><b>FurCon XYZ</b> — Bangkok, TH · 12–14 Sep 2026</li>
-      </ul>
-      <p>When you've got real entries, swap this whole box for:</p>
-      <ul>
-        <li><code>&lt;ul class="info-list"&gt; &lt;li&gt;...&lt;/li&gt; &lt;/ul&gt;</code></li>
-      </ul>
-    </div>
+      <dl class="con-meta">
+        <dt>Dates</dt>
+        <dd>14 – 15 November 2026</dd>
+        <dt>Venue</dt>
+        <dd>Mr. FOX Live House</dd>
+        <dt>Tickets</dt>
+        <dd>Via Eventpop</dd>
+      </dl>
 
-    <!-- HOW TO SAY HI -->
-    <h2>How to Say Hi</h2>
-    <!--
-      ══════════════════════════════════════════════════════════
-        ✏️  EDIT ME — BOUNDARIES
-        Fill in your real preferences. Common fields below.
-        Once filled in, replace the .todo block with a
-        <ul class="info-list"> like the one in Con Schedule.
-      ══════════════════════════════════════════════════════════
-    -->
-    <div class="todo">
-      <p><strong>Tell visitors how to approach you.</strong></p>
-      <p>Common things to spell out:</p>
-      <ul>
-        <li><b>Hugs</b> — yes / no / ask first</li>
-        <li><b>Photos</b> — yes / no / ask first / suit only</li>
-        <li><b>Headpats / touching</b> — yes / no / suit only</li>
-        <li><b>Fursuit interactions</b> — anything to know</li>
-        <li><b>Languages</b> — Thai, English, etc.</li>
-        <li><b>Anything else</b> — small talk, drawing, etc.</li>
-      </ul>
-      <p>Delete this box and use <code>&lt;ul class="info-list"&gt;</code> when ready.</p>
-    </div>
+      <div class="con-body">
+        <p>
+          We’ll be there! If you’re around, come find us — we’d love to meet up,
+          hang out, or snap some photos together.
+        </p>
+        <p>
+          Official details and tickets are on Eventpop. See you at the Vault. 🦖
+        </p>
+      </div>
+
+      <div class="con-actions">
+        <a class="con-btn primary" href="https://bangkokbeasts.com/2026/" target="_blank" rel="noopener">Get tickets on Eventpop</a>
+        <a class="con-btn" href="https://www.facebook.com/BangkokBeasts/" target="_blank" rel="noopener">Official page</a>
+      </div>
+    </article>
 
     <h2>Family Members</h2>
     <div class="family" id="family"></div>
@@ -1500,7 +1565,7 @@
 })();
 
 /* ============================================================
-   SPLASH — boot sequence + click to dismiss
+   SPLASH — boot sequence with a slow finish
    ============================================================ */
 (function () {
   var splash = document.getElementById("splash");
@@ -1522,16 +1587,17 @@
     if (e.key === "Escape" || e.key === "Enter" || e.key === " ") dismiss();
   });
 
-  /* --- boot sequence --- */
   var log     = document.getElementById("bootLog");
   var content = document.getElementById("splashContent");
   if (!log || !content) return;
 
+  /* Each line has its own delay before the NEXT line appears.
+     The final "READY" holds for a while, then the splash swaps. */
   var lines = [
-    "> INITIALIZING WILDFURY OS...",
-    "> LOADING ASSETS ... OK",
-    "> VERIFYING PACK LINK ... OK",
-    "> READY"
+    { text: "> INITIALIZING WILDFURY OS...", delay: 180 },
+    { text: "> LOADING ASSETS ... OK",       delay: 180 },
+    { text: "> VERIFYING PACK LINK ... OK",  delay: 220 },
+    { text: "> READY",                       delay: 1400, final: true }
   ];
 
   var i = 0;
@@ -1540,19 +1606,23 @@
     if (dismissed) return;
 
     if (i >= lines.length) {
-      /* boot finished — swap the log for the welcome content */
       log.style.display = "none";
       content.removeAttribute("hidden");
-      requestAnimationFrame(function () { content.classList.add("on"); });
+      /* two rAF ticks so the transition from [hidden] actually plays */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { content.classList.add("on"); });
+      });
       return;
     }
 
+    var line = lines[i];
     var p = document.createElement("p");
-    p.className = "boot-line";
-    p.textContent = lines[i];
+    p.className = "boot-line" + (line.final ? " final" : "");
+    p.textContent = line.text;
     log.appendChild(p);
+
     i++;
-    setTimeout(nextLine, 250);
+    setTimeout(nextLine, line.delay);
   }
 
   setTimeout(nextLine, 200);
@@ -1582,14 +1652,13 @@
 
 /* ============================================================
    D-DAY COUNTER
-   Together since 14 June 2025 — ticks every second.
    ============================================================ */
 (function () {
   var daysEl  = document.getElementById("ddayDays");
   var clockEl = document.getElementById("ddayClock");
   if (!daysEl || !clockEl) return;
 
-  /* Thailand time (UTC+7). Change the timezone if you ever need to. */
+  /* Thailand time (UTC+7). */
   var START = new Date("2025-06-14T00:00:00+07:00").getTime();
 
   function pad(n, w) {
