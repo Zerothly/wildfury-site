@@ -1762,6 +1762,170 @@
 
     footer { padding: 32px 0 40px; }
   }
+
+  /* ============================================================
+     RETRO OS FEEL
+     Snappy, instant, buttons that physically sink when clicked.
+     Everything in this block is an add-on: delete the whole block
+     and the site goes back to how it looked before.
+     ============================================================ */
+
+  /* "Pressed" colours for each theme */
+  :root,
+  html[data-theme="light"] {
+    --xp-btn-bg-down: linear-gradient(180deg,
+      #cbb78a 0%, #d6c398 50%, #e0d0aa 100%);
+    --xp-border-down: var(--xp-bevel-dark) var(--xp-bevel-light) var(--xp-bevel-light) var(--xp-bevel-dark);
+  }
+  html[data-theme="dark"] {
+    --xp-btn-bg-down: linear-gradient(180deg,
+      #0e0c08 0%, #181510 50%, #24201a 100%);
+    --xp-border-down: var(--xp-bevel-dark) var(--xp-bevel-light) var(--xp-bevel-light) var(--xp-bevel-dark);
+  }
+
+  /* No tap flash, no 300ms tap delay on phones */
+  html { -webkit-tap-highlight-color: transparent; }
+  a, button, .tile, .collection, .person { touch-action: manipulation; }
+
+  /* 1. SNAP: old systems repainted instantly, nothing faded or slid */
+  body, .hdr, .hdr-inner, .hdr-decor, .hdr-title, .hdr-slot,
+  .hdr-btn, .theme-toggle, .con-btn, .err-btn, .lb button,
+  .copy-btn, .open-btn, .term-close,
+  .person, .collection, .tile, .term-toggle,
+  .splash, .splash.gone, .splash-content,
+  .lb, .lb.on, .lb img,
+  .term-panel, .term-panel.on,
+  .discord-pop, .discord-pop:not([hidden]) {
+    transition: none;
+  }
+
+  /* Pages pop in with a quick 3-frame jolt instead of a smooth slide */
+  @media (prefers-reduced-motion: no-preference) {
+    .page.on { animation: pageIn .1s steps(3, end); }
+  }
+
+  /* 2. Cards no longer float up on hover (old UIs just highlighted) */
+  .person:hover,
+  .collection:hover,
+  .tile:hover { transform: none; }
+
+  /* 3. PRESSED BUTTONS: bevel flips, shadow goes, button drops 1px */
+  .hdr-btn:active,
+  .theme-toggle:active,
+  .con-btn:active,
+  .err-btn:active,
+  .lb button:active,
+  .copy-btn:active,
+  .open-btn:active {
+    background: var(--xp-btn-bg-down);
+    border-color: var(--xp-border-down);
+    box-shadow: inset 1px 1px 0 var(--xp-bevel-shadow);
+    color: var(--xp-btn-text);
+    text-shadow: none;
+    transform: translate(1px, 1px);
+  }
+
+  /* The page you're on stays "pushed in", like a toolbar button */
+  .hdr-btn.on { box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .45); }
+  .hdr-btn.on:active {
+    background: var(--xp-title-bg);
+    color: #fff;
+  }
+
+  /* Green "Get tickets" button */
+  .con-btn.primary:active {
+    background: linear-gradient(180deg,
+      #2a7a18 0%, #4aa838 54%, #6cc850 55%, #a0e880 100%);
+    border-color: #2a5a18 #c8f4a8 #c8f4a8 #2a5a18;
+    color: #0a2410;
+  }
+
+  /* Blue window buttons ( _  □ ) */
+  .xp-ctrl { cursor: default; }
+  .xp-ctrl:active {
+    background: linear-gradient(180deg,
+      #0e50b8 0%, #2a6fd8 55%, #5ca0ff 100%);
+    border-color: #003cbd #a0ccff #a0ccff #003cbd;
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .4);
+    transform: translate(1px, 1px);
+  }
+
+  /* Red close buttons ( × ) */
+  .xp-ctrl.close:active,
+  .term-close:active,
+  .discord-close:active {
+    background: linear-gradient(180deg,
+      #b81414 0%, #e83a3a 55%, #ff9090 100%);
+    border-color: #8a0a0a #ffc0c0 #ffc0c0 #8a0a0a;
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .4);
+    color: #fff;
+    text-shadow: none;
+    transform: translate(1px, 1px);
+  }
+
+  /* Terminal button: sinks flush into its shadow, and stays down while open */
+  .term-toggle:active,
+  .term-toggle[aria-expanded="true"] {
+    background: var(--xp-btn-bg-down);
+    border-color: var(--xp-border-down);
+    box-shadow: none;
+    color: var(--xp-btn-text);
+    text-shadow: none;
+    transform: translate(2px, 2px);
+  }
+
+  /* Cards and thumbnails: press down into their shadow */
+  .person:active,
+  .collection:active,
+  .tile:active {
+    border-color: var(--xp-border-down);
+    box-shadow: none;
+    transform: translate(1px, 1px);
+  }
+
+  /* Text-style Discord link nudges down too */
+  .discord-btn:active { transform: translate(1px, 1px); }
+
+  /* Taskbar: Start button presses, the open app sits sunken (like XP) */
+  .taskbar-start:active {
+    background: linear-gradient(180deg,
+      #2a7a18 0%, #4aa835 55%, #80d060 100%);
+    border-color: #2a5a18 #c8f4a8 #c8f4a8 #2a5a18;
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .35);
+  }
+  .taskbar-app { box-shadow: inset 1px 1px 3px rgba(0, 0, 0, .5); }
+
+  /* 4. SUNKEN FIELDS: terminal screen and input look carved in */
+  .term-out,
+  .term-in-row {
+    border: 2px solid;
+    border-color: var(--xp-border-down);
+  }
+  .term-in-row { margin-top: 3px; }
+
+  /* 5. Classic dotted focus box for keyboard users */
+  .hdr-btn:focus-visible,
+  .theme-toggle:focus-visible,
+  .con-btn:focus-visible,
+  .err-btn:focus-visible,
+  .lb button:focus-visible,
+  .copy-btn:focus-visible,
+  .open-btn:focus-visible {
+    outline: 1px dotted var(--text);
+    outline-offset: -4px;
+  }
+  .tile:focus-visible,
+  .person:focus-visible,
+  .collection:focus-visible,
+  .term-toggle:focus-visible {
+    outline: 2px dotted var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* 6. Contrast fix: "Return to home" text was the same colour as its button */
+  .err-btn,
+  .err-btn:hover { color: var(--xp-btn-text); }
+  .err-btn:hover { color: var(--xp-btn-text-hover); }
 </style>
 </head>
 <body>
@@ -3138,6 +3302,9 @@ function route() {
 
   show404(id);
 }
+
+/* Lets the "pressed button" look show up on iPhones/iPads when tapped */
+document.addEventListener("touchstart", function () {}, { passive: true });
 
 drawCharacters();
 drawCollectionLists();
