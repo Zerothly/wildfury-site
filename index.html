@@ -1926,6 +1926,80 @@
   .err-btn,
   .err-btn:hover { color: var(--xp-btn-text); }
   .err-btn:hover { color: var(--xp-btn-text-hover); }
+
+  /* ============================================================
+     EASTER EGG: YAAI popups (hidden command in the site's terminal)
+     ============================================================ */
+  .yaai-pop {
+    position: fixed;
+    z-index: 1100;
+    width: 230px;
+    margin: 0;
+    background: var(--bg-card);
+  }
+  .yaai-pop .xp-body { padding: 14px 12px 14px; text-align: center; }
+  .yaai-pop .yaai-big {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: #c01818;
+  }
+  html[data-theme="dark"] .yaai-pop .yaai-big { color: #ff6a6a; }
+  .yaai-pop .yaai-dino { display: block; font-size: 2.4rem; line-height: 1.2; }
+  .yaai-pop .yaai-sticker {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 120px;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+  .yaai-pop .yaai-x {
+    width: 20px;
+    height: 18px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    font: inherit;
+    font-size: .8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(180deg, #ff9090 0%, #e83a3a 45%, #b81414 100%);
+    border: 1px solid #8a0a0a;
+    border-top-color: #ffc0c0;
+    border-left-color: #ffc0c0;
+    border-radius: 2px;
+    text-shadow: 1px 1px 0 rgba(0,0,0,.45);
+  }
+  .yaai-pop .yaai-x:active {
+    background: linear-gradient(180deg, #b81414 0%, #e83a3a 55%, #ff9090 100%);
+    border-color: #8a0a0a #ffc0c0 #ffc0c0 #8a0a0a;
+    transform: translate(1px, 1px);
+  }
+  .yaai-stop {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--taskbar-h) + 12px);
+    transform: translateX(-50%);
+    z-index: 1110;
+  }
+  .yaai-stop:active { transform: translateX(-50%) translate(1px, 1px); }
+  @media (prefers-reduced-motion: no-preference) {
+    .yaai-pop .yaai-big   { animation: blink .5s step-end infinite; }
+    .yaai-pop .yaai-dino,
+    .yaai-pop .yaai-sticker { animation: yaaiBounce .4s steps(2, end) infinite alternate; }
+    @keyframes yaaiBounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+  }
+  @media (max-width: 560px) {
+    .yaai-pop { width: 190px; }
+    .yaai-stop { bottom: 70px; }
+  }
 </style>
 </head>
 <body>
@@ -3196,6 +3270,12 @@ document.addEventListener("keydown", function (e) {
         print("No matching ID in the pack registry. Say hi at a con!", "dim");
         return;
 
+      case "yaai":
+      case "idiot":
+        print("Running YAAI.EXE ...", "err");
+        if (window.__yaaiStart) window.__yaaiStart();
+        return;
+
       case "clear":
       case "cls":
         output.innerHTML = "";
@@ -3302,6 +3382,180 @@ function route() {
 
   show404(id);
 }
+
+/* ============================================================
+   EASTER EGG: type  yaai  or  idiot  in the terminal (hidden, not listed in help),
+   OR type  idiot  anywhere on the page, OR click the taskbar Start button 7 times
+   Spawns "YOU ARE AN IDIOT" popups + music. Closing one spawns two more.
+   Press Esc or "Close all" to stop it.
+   ============================================================ */
+(function () {
+  var AUDIO_FILE = "decorative/yaai.mp3";   // YOUR audio file (upload it to this path)
+  var POP_TITLE = "YAAI.EXE";               // popup window title
+  var POP_TEXT  = "YOU ARE AN IDIOT!";      // popup message
+  var POP_ICON  = "🦖";                     // backup picture, only used if a sticker file is missing
+  var STICKER_PATH  = "decorative/mina_sticker_";   // + number + file type, e.g. mina_sticker_3.png
+  var STICKER_COUNT = 8;                    // how many stickers you have (1 to 8)
+  var STICKER_EXTS  = [".png", ".PNG", ".webp", ".jpg", ".jpeg", ".gif"];  // file types it will try
+  var AUDIO_VOLUME  = 0.25;                 // 0 = silent, 1 = full. Lower = quieter
+  var TRIGGER_WORD  = "idiot";              // type this anywhere on the page
+  var START_CLICKS  = 6;                    // click the taskbar Start button MORE than this many times
+  var START_COUNT = 6;                      // popups at the start
+  var MAX_POPS    = 24;                     // never more than this at once
+
+  var active = false, layer = null, stopBtn = null;
+  var audio = null;
+
+  function rand(max) { return Math.floor(Math.random() * Math.max(max, 1)); }
+
+  // Every sticker shows once before any repeats (shuffled "bag")
+  var bag = [], extTry = 0;
+  function nextSticker() {
+    if (!bag.length) {
+      for (var i = 1; i <= STICKER_COUNT; i++) bag.push(i);
+      for (var j = bag.length - 1; j > 0; j--) {
+        var k = rand(j + 1), t = bag[j]; bag[j] = bag[k]; bag[k] = t;
+      }
+    }
+    return bag.pop();
+  }
+
+  function makeSticker() {
+    var n = nextSticker();
+    var e = extTry;
+    var img = new Image();
+    img.className = "yaai-sticker";
+    img.alt = "";
+    img.draggable = false;
+    img.onload = function () { extTry = e; };            // remember the file type that worked
+    img.onerror = function () {
+      e++;
+      if (e < STICKER_EXTS.length) { img.src = STICKER_PATH + n + STICKER_EXTS[e]; return; }
+      var fallback = document.createElement("span");     // nothing found: show the emoji
+      fallback.className = "yaai-dino";
+      fallback.textContent = POP_ICON;
+      if (img.parentNode) img.parentNode.replaceChild(fallback, img);
+    };
+    img.src = STICKER_PATH + n + STICKER_EXTS[e];
+    return img;
+  }
+
+  function spawn() {
+    if (!layer || layer.children.length >= MAX_POPS) return;
+
+    var pop = document.createElement("div");
+    pop.className = "yaai-pop xp-window";
+    pop.setAttribute("role", "alertdialog");
+    pop.setAttribute("aria-label", POP_TEXT);
+
+    var bar = document.createElement("div");
+    bar.className = "xp-titlebar";
+    var title = document.createElement("span");
+    title.className = "xp-title-text";
+    title.textContent = POP_TITLE;
+    var x = document.createElement("button");
+    x.type = "button";
+    x.className = "yaai-x";
+    x.setAttribute("aria-label", "Close");
+    x.textContent = "×";
+    bar.appendChild(title);
+    bar.appendChild(x);
+
+    var body = document.createElement("div");
+    body.className = "xp-body";
+    var big = document.createElement("p");
+    big.className = "yaai-big";
+    big.textContent = POP_TEXT;
+    body.appendChild(big);
+    body.appendChild(makeSticker());
+
+    pop.appendChild(bar);
+    pop.appendChild(body);
+
+    var w = Math.min(window.innerWidth < 560 ? 190 : 230, window.innerWidth - 10);
+    pop.style.left = rand(window.innerWidth  - w   - 8) + "px";
+    pop.style.top  = rand(window.innerHeight - 260 - 8) + "px";
+
+    x.addEventListener("click", function () {
+      pop.remove();
+      if (!active) return;
+      spawn(); spawn();                      // the classic: close one, get two
+    });
+
+    layer.appendChild(pop);
+  }
+
+  function loadMusic() {
+    if (!audio) {
+      audio = new Audio(AUDIO_FILE);
+      audio.loop = true;
+      audio.volume = AUDIO_VOLUME;
+      audio.preload = "auto";
+      audio.addEventListener("error", function () {});   // file missing: popups still work, just silent
+    }
+    audio.currentTime = 0;
+    var tryPlay = audio.play();
+    if (tryPlay && tryPlay.catch) tryPlay.catch(function () {});   // browser blocked sound: ignore
+  }
+
+  function stop() {
+    active = false;
+    if (layer)   { layer.remove();   layer = null; }
+    if (stopBtn) { stopBtn.remove(); stopBtn = null; }
+    if (audio) { audio.pause(); audio.currentTime = 0; }
+    document.removeEventListener("keydown", onKey);
+  }
+
+  function onKey(e) { if (e.key === "Escape") stop(); }
+
+  function start() {
+    if (active) return;
+    active = true;
+
+    layer = document.createElement("div");
+    document.body.appendChild(layer);
+
+    stopBtn = document.createElement("button");
+    stopBtn.type = "button";
+    stopBtn.className = "con-btn yaai-stop";
+    stopBtn.textContent = "Close all (Esc)";
+    stopBtn.addEventListener("click", stop);
+    document.body.appendChild(stopBtn);
+    document.addEventListener("keydown", onKey);
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var n = reduce ? 3 : START_COUNT;
+    for (var i = 0; i < n; i++) {
+      (function (d) { setTimeout(function () { if (active) spawn(); }, d); })(i * 160);
+    }
+    loadMusic();
+  }
+
+  // The site's terminal widget calls this when someone types  yaai  (or  idiot)
+  window.__yaaiStart = start;
+
+  // Trigger 1: type the word anywhere on the page (not while typing in a text box)
+  var typed = "";
+  document.addEventListener("keydown", function (e) {
+    var t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+    if (e.ctrlKey || e.metaKey || e.altKey || !e.key || e.key.length !== 1) return;
+    typed = (typed + e.key.toLowerCase()).slice(-TRIGGER_WORD.length);
+    if (typed === TRIGGER_WORD) { typed = ""; start(); }
+  });
+
+  // Trigger 2: click the taskbar Start button more than START_CLICKS times
+  var startBtn = document.querySelector(".taskbar-start");
+  var clicks = 0, clickTimer = null;
+  if (startBtn) {
+    startBtn.addEventListener("click", function () {
+      clicks++;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(function () { clicks = 0; }, 4000);   // gives up if you pause 4s
+      if (clicks > START_CLICKS) { clicks = 0; start(); }
+    });
+  }
+})();
 
 /* Lets the "pressed button" look show up on iPhones/iPads when tapped */
 document.addEventListener("touchstart", function () {}, { passive: true });
